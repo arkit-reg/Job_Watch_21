@@ -98,7 +98,7 @@ quiet_logs = true
 log_sponsorship = false
 
 # Email (if set up) only arrives when there are new jobs. Set to true to also get "no new jobs" emails.
-email_every_run = false
+email_every_run = true
 
 # When a careers page shows no job list, open it in a real (headless) browser, the way a person would.
 # Needs the browser installed (the GitHub workflow does this). Found job boards are saved, so this is
