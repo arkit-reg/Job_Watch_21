@@ -1,0 +1,119 @@
+# Job watch settings. Matching ignores case and works on whole words, so "QA" won't match
+# "Qatar" and "intern" won't match "internal". A space also matches "-" or "/".
+
+# A job title must contain at least one of these...
+include = [
+  # --- Quality Assurance / Quality Systems ---
+  "quality assurance", "QA", "quality system", "quality compliance", "quality associate",
+  "quality specialist", "quality analyst", "quality coordinator", "quality engineer",
+  "quality operations", "quality documentation", "quality records", "quality management", "QMS",
+  "GxP", "GMP compliance", "GMP auditor", "GCP auditor", "GLP auditor", "quality auditor",
+  "compliance auditor", "supplier quality", "sterility assurance", "data integrity",
+  "document control", "document controller", "document management", "documentation specialist",
+  "documentation coordinator", "change control", "deviation", "CAPA", "batch record",
+  "batch release", "batch disposition", "lot release", "complaint", "GMP training",
+  "compliance specialist", "compliance associate", "compliance analyst",
+
+  # --- Regulatory Affairs (specific titles, so lawyers and finance "regulatory" jobs stay out) ---
+  "regulatory affairs", "regulatory associate", "regulatory specialist", "regulatory coordinator",
+  "regulatory analyst", "regulatory operations", "regulatory CMC", "CMC regulatory", "regulatory submission",
+  "regulatory publishing", "regulatory labeling", "regulatory compliance", "regulatory intelligence",
+  "regulatory writer", "regulatory documentation", "regulatory information", "regulatory strategy",
+  "RA associate", "RA specialist", "submissions specialist", "submissions coordinator", "submissions associate",
+  "eCTD", "labeling specialist", "labeling coordinator", "labeling associate",
+
+  # --- Validation / CSV ---
+  "validation", "CSV", "computer software assurance", "qualification", "commissioning", "C&Q", "CQV",
+]
+
+# ...and none of these. Tuned for entry level; delete any you'd still want to hear about.
+exclude = [
+  # seniority
+  "senior", "sr", "principal", "staff", "lead", "supervisor", "manager", "director", "dir",
+  "head of", "vice president", "VP", "chief", "III", "IV",
+  "intern", "internship", "co-op",
+  # research and lab roles (also catches "Assay Validation Scientist")
+  "research", "scientist", "postdoc", "assay", "bioassay", "laboratory technician", "lab technician",
+  # software testing
+  "software", "SDET", "test engineer", "test analyst", "tester", "QA automation", "test automation",
+  "automation engineer", "data validation",
+  # other fields that share words with yours
+  "counsel", "attorney", "paralegal", "regulatory reporting", "commercial compliance", "healthcare compliance",
+  "trade compliance", "export compliance", "privacy", "SOX", "tax", "financial", "finance", "ethics",
+  "environmental", "EHS", "HSE",
+]
+
+# After reading each new job's full description:
+# skip jobs outside the US (uses the job system's country, the location, then the description)
+us_only = true
+# skip jobs whose lowest experience requirement is above this ("Bachelor's + 5 or Master's + 3" counts as 3)
+max_years_experience = 4
+
+# Typed into the search box on Workday sites (most big pharma), one search per term.
+# Workday search is fuzzy, so keep these broad; the include/exclude lists above do the real filtering.
+search_terms = ["regulatory", "quality", "QA", "validation", "compliance", "document control",
+                "CAPA", "qualification", "batch record", "labeling"]
+
+# Optional location filters. Jobs with no location listed are always kept.
+# Empty location_include means anywhere.
+location_include = []
+# US-only: some companies list a site name (Regeneron shows "Limerick") instead of the country, so both are here.
+location_exclude = [
+  # countries
+  "Ireland", "United Kingdom", "England", "Scotland", "Wales", "Switzerland", "Germany", "France", "Belgium",
+  "Netherlands", "Spain", "Italy", "Denmark", "Sweden", "Norway", "Finland", "Austria", "Poland", "Czech",
+  "Hungary", "Portugal", "Greece", "Turkey", "Israel", "Egypt", "Saudi Arabia", "UAE", "Canada", "Mexico",
+  "Brazil", "Argentina", "Colombia", "Chile", "Costa Rica", "Japan", "China", "Hong Kong", "Taiwan", "India",
+  "Singapore", "Korea", "Australia", "New Zealand", "Philippines", "Vietnam", "Thailand", "Malaysia", "Indonesia",
+  "South Africa",
+  # cities that job sites often list without the country
+  "Limerick", "Dublin", "Cork", "Galway", "Carlow", "Sligo", "London", "Zug", "Basel", "Geneva", "Paris", "Lyon",
+  "Munich", "Frankfurt", "Berlin", "Ludwigshafen", "Penzberg", "Mannheim", "Leiden", "Amsterdam", "Brussels",
+  "Antwerp", "Beerse", "Geel", "Copenhagen", "Stockholm", "Madrid", "Barcelona", "Milan", "Rome", "Vienna",
+  "Warsaw", "Krakow", "Prague", "Budapest", "Lisbon", "Toronto", "Montreal", "Mississauga", "Mexico City",
+  "Sao Paulo", "São Paulo", "Buenos Aires", "Bogota", "Bogotá", "Heredia", "Tokyo", "Osaka", "Seoul", "Shanghai",
+  "Beijing", "Suzhou", "Hangzhou", "Guangzhou", "Shenzhen", "Taipei", "Hyderabad", "Bengaluru", "Bangalore",
+  "Mumbai", "Ahmedabad", "Pune", "Goa", "Chennai", "Gurgaon", "Gurugram", "Noida", "Vadodara", "Sydney",
+  "Melbourne", "Manila", "Bangkok", "Kuala Lumpur", "Jakarta",
+]
+
+# Only send jobs posted within this many hours (0 = no limit).
+# Workday sites only show whole days, so 72 keeps "Today", "Yesterday" and "2 Days Ago".
+# Sites that show no posting date: a job counts as new when it first appears (checked every 3 hours).
+max_age_hours = 72
+
+# Second source: Adzuna job search (free API key; add ADZUNA_APP_ID and ADZUNA_APP_KEY secrets).
+# Each run searches these titles across the US for postings from the last day. The free plan allows
+# 2,500 searches a month, so keep (number of searches per run) x 8 runs x 30 days under that.
+adzuna_queries = ["quality assurance", "regulatory affairs", "validation specialist", "document control",
+                  "QA specialist", "computer system validation", "regulatory associate", "quality specialist"]
+adzuna_max_calls_per_run = 8
+adzuna_days = 1
+# false = only postings from companies in companies.csv; true = any US employer (more jobs, more noise)
+adzuna_any_company = false
+
+# Public repository: keep run logs to counts only (anyone can read them), and leave the
+# sponsorship columns out of jobs_log.csv. Your emails still show the sponsorship notes.
+quiet_logs = true
+log_sponsorship = false
+
+# Email (if set up) only arrives when there are new jobs. Set to true to also get "no new jobs" emails.
+email_every_run = false
+
+# When a careers page shows no job list, open it in a real (headless) browser, the way a person would.
+# Needs the browser installed (the GitHub workflow does this). Found job boards are saved, so this is
+# mostly a one-time cost per company.
+browser_fallback = true
+
+# How often each batch in companies.csv (the priority column) is checked. Runs happen every 3 hours,
+# so use multiples of 3: high = every run (3 hours), medium and normal as set here.
+medium_interval_hours = 3
+normal_interval_hours = 3
+
+# Stop starting new companies after this many minutes and finish them next run.
+# Public repository: GitHub minutes are unlimited, so runs can take longer (the workflow stops a run at 40).
+# For a private repository use 5 (2,000 free minutes a month).
+max_run_minutes = 25
+
+# How many sites to check at the same time
+workers = 24

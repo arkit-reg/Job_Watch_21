@@ -1,0 +1,501 @@
+company,url,render,priority,group
+Eli Lilly,https://careers.lilly.com/us/en/search-results?keywords=quality,,high,Your original list
+Amgen,https://amgen.wd1.myworkdayjobs.com/Careers,,high,Your original list
+AbbVie,https://careers.abbvie.com/en/jobs?q=quality&options=&page=1,,high,Your original list
+Bristol Myers Squibb,https://bristolmyerssquibb.wd5.myworkdayjobs.com/BMS,,high,Your original list
+Gilead Sciences,https://gilead.wd1.myworkdayjobs.com/gileadcareers,,high,Your original list
+Regeneron,https://regeneron.wd1.myworkdayjobs.com/Careers,,high,Your original list
+Genentech (Roche),https://roche.wd3.myworkdayjobs.com/roche-ext,,high,Your original list
+Vertex Pharmaceuticals,https://vrtx.wd501.myworkdayjobs.com/vertex_careers,,high,Your original list
+Pfizer,https://pfizer.wd1.myworkdayjobs.com/PfizerCareers,,high,Your original list
+Merck & Co.,https://msd.wd5.myworkdayjobs.com/SearchJobs,,high,Your original list
+Johnson & Johnson,https://www.jnj.com,,high,Your original list
+Novartis,https://novartis.wd3.myworkdayjobs.com/Novartis_Careers,,high,Your original list
+AstraZeneca,https://astrazeneca.wd3.myworkdayjobs.com/Careers,,high,Your original list
+Biogen,https://biibhr.wd3.myworkdayjobs.com/external,,high,Your original list
+Moderna,https://modernatx.wd1.myworkdayjobs.com/M_tx,,high,Your original list
+Sanofi,https://sanofi.wd3.myworkdayjobs.com/SanofiCareers,,high,Your original list
+Bayer,https://www.bayer.com,,high,Your original list
+Boehringer Ingelheim,https://www.boehringer-ingelheim.com,,high,Your original list
+Takeda,https://jobs.takeda.com/search-jobs/quality/1113/1,,high,Your original list
+Novo Nordisk,https://www.novonordisk-us.com,,high,Your original list
+Teva Pharmaceuticals,https://www.tevapharm.com,,high,Your original list
+Daiichi Sankyo,https://daiichisankyo.us,,high,Your original list
+Astellas Pharma,https://www.astellas.com/us,,high,Your original list
+Alnylam Pharmaceuticals,https://www.alnylam.com,,high,Your original list
+Sarepta Therapeutics,https://www.sarepta.com,,high,Your original list
+Thermo Fisher Scientific,https://thermofisher.wd5.myworkdayjobs.com/ThermoFisherCareers,,high,Your original list
+Catalent,https://www.catalent.com,,high,Your original list
+Lonza,https://www.lonza.com,,high,Your original list
+Fujifilm Diosynth Biotechnologies,https://fujifilmdiosynth.com,,high,Your original list
+Charles River Laboratories,https://www.criver.com,,high,Your original list
+Alkermes,https://www.alkermes.com,,high,Your original list
+Ironwood Pharmaceuticals,https://www.ironwoodpharma.com,,high,Your original list
+Intellia Therapeutics,https://www.intelliatx.com,,high,Your original list
+Scholar Rock,https://www.scholarrock.com,,high,Your original list
+BridgeBio Pharma,https://www.bridgebio.com,,high,Your original list
+Frontier Medicines,https://www.frontiermeds.com,,high,Your original list
+Capricor Therapeutics,https://www.capricor.com,,high,Your original list
+Arrowhead Pharmaceuticals,https://www.arrowheadpharma.com,,high,Your original list
+Artiva Biotherapeutics,https://www.artivabio.com,,high,Your original list
+Immunovant,https://www.immunovant.com,,high,Your original list
+Aspen Neuroscience,https://www.aspenneuroscience.com,,high,Your original list
+CytomX Therapeutics,https://www.cytomx.com,,high,Your original list
+Nurix Therapeutics,https://www.nurixtx.com,,high,Your original list
+Dianthus Therapeutics,https://www.dianthustx.com,,high,Your original list
+Entrada Therapeutics,https://www.entradatx.com,,high,Your original list
+Aura Biosciences,https://www.aurabiosciences.com,,high,Your original list
+Partner Therapeutics,https://www.partnertx.com,,high,Your original list
+Azurity Pharmaceuticals,https://www.azurity.com,,high,Your original list
+CONTINUUS Pharmaceuticals,https://www.continuuspharma.com,,high,Your original list
+Revolution Medicines,https://www.revmed.com,,high,Your original list
+Fate Therapeutics,https://www.fatetherapeutics.com,,high,Your original list
+Cytokinetics,https://www.cytokinetics.com,,high,Your original list
+Krystal Biotech,https://krystalbiotech.applytojob.com/apply,,high,Your original list
+Corcept Therapeutics,https://www.corcept.com,,high,Your original list
+Insmed,https://www.insmed.com,,high,Your original list
+Celldex Therapeutics,https://www.celldex.com,,high,Your original list
+Legend Biotech,https://www.legendbiotech.com,,high,Your original list
+Amneal Pharmaceuticals,https://www.amneal.com,,high,Your original list
+Organon,https://www.organon.com,,high,Your original list
+Eisai (US),https://us.eisai.com,,high,Your original list
+Otsuka (US),https://www.otsuka-us.com,,high,Your original list
+Ascendia Pharmaceutical Solutions,https://www.ascendiapharma.com,,high,Your original list
+Cambrex,https://www.cambrex.com,,high,Your original list
+Experic,https://www.experic.com,,high,Your original list
+Hovione,https://www.hovione.com,,high,Your original list
+Made Scientific,https://www.madescientific.com,,high,Your original list
+BioCentriq,https://www.biocentriq.com,,high,Your original list
+KBI Biopharma,https://www.kbibiopharma.com,,high,Your original list
+Fennec Pharmaceuticals,https://www.fennecpharma.com,,high,Your original list
+United Therapeutics,https://www.unither.com,,high,Your original list
+Grifols,https://www.grifols.com,,high,Your original list
+Syneos Health,https://www.syneoshealth.com,,high,Your original list
+IQVIA,https://www.iqvia.com,,high,Your original list
+GRAIL,https://www.grail.com,,high,Your original list
+Merakris Therapeutics,https://www.merakris.com,,high,Your original list
+BioMedomics,https://www.biomedomics.com,,high,Your original list
+Chiesi USA,https://www.chiesiusa.com,,high,Your original list
+Sterling Pharma Solutions,https://www.sterlingpharmasolutions.com,,high,Your original list
+BOC Sciences,https://www.bocsci.com,,high,Your original list
+Curia,https://www.curiaglobal.com,,high,Your original list
+AGC Biologics,https://www.agcbio.com,,high,Your original list
+Samsung Biologics,https://www.samsungbiologics.com,,high,Your original list
+PCI Pharma Services,https://www.pci.com,,high,Your original list
+Alcami,https://www.alcami.com,,high,Your original list
+Recipharm,https://www.recipharm.com,,high,Your original list
+Siegfried,https://www.siegfried.ch,,high,Your original list
+Piramal Pharma Solutions,https://www.piramalpharmasolutions.com,,high,Your original list
+Ajinomoto Bio-Pharma Services,https://www.ajibio-pharma.com,,high,Your original list
+Emergent BioSolutions,https://www.emergentbiosolutions.com,,high,Your original list
+Avid Bioservices,https://www.avidbio.com,,high,Your original list
+Resilience,https://www.resilience.com,,high,Your original list
+Genezen,https://www.genezen.com,,high,Your original list
+STC Biologics,https://www.stcbiologics.com,,high,Your original list
+UPM Pharmaceuticals,https://www.upm-inc.com,,high,Your original list
+Spectrum Chemical,https://www.spectrumchemical.com,,high,Your original list
+Cellipont Bioservices,https://www.cellipont.com,,high,Your original list
+Nucleus RadioPharma,https://www.nucleusradiopharma.com,,high,Your original list
+Discovery Life Sciences,https://www.dls.com,,high,Your original list
+Bavarian Nordic,https://www.bavarian-nordic.com,,high,Your original list
+Tyra Biosciences,https://www.tyra.bio,,high,Your original list
+Aerogen,https://www.aerogen.com,,high,Your original list
+Orano Med,https://www.oranomed.com,,high,Your original list
+Centessa Pharmaceuticals,https://www.centessa.com,,high,Your original list
+MilliporeSigma (EMD Group),https://www.emdgroup.com,,high,Your original list
+BeOne Medicines,https://www.beonemedicines.com,,high,Your original list
+Jazz Pharmaceuticals,https://www.jazzpharma.com,,high,Your original list
+Ultragenyx,https://www.ultragenyx.com,,high,Your original list
+BioMarin,https://www.biomarin.com,,high,Your original list
+Ionis Pharmaceuticals,https://www.ionis.com,,high,Your original list
+Incyte,https://www.incyte.com,,high,Your original list
+Relay Therapeutics,https://www.relaytx.com,,high,Your original list
+Day One Biopharmaceuticals,https://www.dayonebio.com,,high,Your original list
+Mirum Pharmaceuticals,https://www.mirumpharma.com,,high,Your original list
+Travere Therapeutics,https://www.travere.com,,high,Your original list
+Ascendis Pharma,https://www.ascendispharma.com,,high,Your original list
+Crinetics Pharmaceuticals,https://www.crinetics.com,,high,Your original list
+Rigel Pharmaceuticals,https://www.rigel.com,,high,Your original list
+Karyopharm Therapeutics,https://www.karyopharm.com,,high,Your original list
+Verastem Oncology,https://www.verastem.com,,high,Your original list
+Ipsen (Epizyme),https://www.ipsen.com,,high,Your original list
+Deciphera,https://www.deciphera.com,,high,Your original list
+MacroGenics,https://www.macrogenics.com,,high,Your original list
+Xencor,https://www.xencor.com,,high,Your original list
+Arcus Biosciences,https://www.arcusbio.com,,high,Your original list
+Iovance Biotherapeutics,https://www.iovance.com,,high,Your original list
+Adaptimmune,https://www.adaptimmune.com,,high,Your original list
+Atara Biotherapeutics,https://www.atarabio.com,,high,Your original list
+Allogene Therapeutics,https://www.allogene.com,,high,Your original list
+Century Therapeutics,https://www.centurytx.com,,high,Your original list
+Sun Pharma (US),https://www.sunpharma.com/usa,,high,Your original list
+Dr. Reddy's,https://www.drreddys.com,,high,Your original list
+Aurobindo Pharma USA,https://www.aurobindousa.com,,high,Your original list
+Glenmark Pharmaceuticals USA,https://www.glenmarkpharma-us.com,,high,Your original list
+Zydus Pharmaceuticals USA,https://www.zydususa.com,,high,Your original list
+Lupin Pharmaceuticals,https://www.lupin.com,,high,Your original list
+Cipla USA,https://www.ciplausa.com,,high,Your original list
+Hikma Pharmaceuticals,https://www.hikma.com,,high,Your original list
+Sandoz,https://www.sandoz.com,,high,Your original list
+Viatris,https://www.viatris.com,,high,Your original list
+GSK,https://www.gsk.com,,medium,Large & mid-size pharma
+CSL Behring,https://www.cslbehring.com,,medium,Large & mid-size pharma
+CSL Seqirus,https://www.seqirus.com,,medium,Large & mid-size pharma
+Zoetis,https://www.zoetis.com,,medium,Large & mid-size pharma
+Elanco,https://www.elanco.com,,medium,Large & mid-size pharma
+UCB,https://www.ucb.com,,medium,Large & mid-size pharma
+Lundbeck,https://www.lundbeck.com,,medium,Large & mid-size pharma
+Servier Pharmaceuticals,https://www.servier.us,,medium,Large & mid-size pharma
+Sobi,https://www.sobi.com,,medium,Large & mid-size pharma
+Ferring Pharmaceuticals,https://www.ferringusa.com,,medium,Large & mid-size pharma
+Galderma,https://www.galderma.com,,medium,Large & mid-size pharma
+LEO Pharma,https://www.leo-pharma.com,,medium,Large & mid-size pharma
+Shionogi,https://www.shionogi.com,,medium,Large & mid-size pharma
+Sumitomo Pharma America,https://www.us.sumitomo-pharma.com,,medium,Large & mid-size pharma
+Mitsubishi Tanabe Pharma America,https://www.mt-pharma-america.com,,medium,Large & mid-size pharma
+Kyowa Kirin,https://kkna.kyowakirin.com,,medium,Large & mid-size pharma
+Kowa Pharmaceuticals America,https://www.kowapharma.com,,medium,Large & mid-size pharma
+Genmab,https://www.genmab.com,,medium,Large & mid-size pharma
+argenx,https://www.argenx.com,,medium,Large & mid-size pharma
+BioNTech,https://www.biontech.com,,medium,Large & mid-size pharma
+Novavax,https://www.novavax.com,,medium,Large & mid-size pharma
+Bausch Health,https://www.bauschhealth.com,,medium,Large & mid-size pharma
+Mallinckrodt,https://www.mallinckrodt.com,,medium,Large & mid-size pharma
+Fresenius Kabi,https://www.fresenius-kabi.com/us,,medium,Large & mid-size pharma
+Kenvue,https://www.kenvue.com,,medium,Large & mid-size pharma
+Haleon,https://www.haleon.com,,medium,Large & mid-size pharma
+Perrigo,https://www.perrigo.com,,medium,Large & mid-size pharma
+Prestige Consumer Healthcare,https://www.prestigeconsumerhealthcare.com,,medium,Large & mid-size pharma
+Recordati Rare Diseases,https://www.recordatirarediseases.com,,medium,Large & mid-size pharma
+Menarini Stemline,https://www.stemline.com,,medium,Large & mid-size pharma
+Biocon Biologics,https://www.bioconbiologics.com,,medium,Large & mid-size pharma
+Accord Healthcare,https://www.accordhealthcare.us,,medium,Large & mid-size pharma
+Apotex,https://www.apotex.com,,medium,Large & mid-size pharma
+Indivior,https://www.indivior.com,,medium,Large & mid-size pharma
+Noven Pharmaceuticals,https://www.noven.com,,medium,Large & mid-size pharma
+Taro Pharmaceuticals,https://www.taro.com,,medium,Large & mid-size pharma
+Octapharma USA,https://www.octapharmausa.com,,medium,Large & mid-size pharma
+Kedrion Biopharma,https://www.kedrion.us,,medium,Large & mid-size pharma
+ADMA Biologics,https://www.admabiologics.com,,medium,Large & mid-size pharma
+American Regent,https://www.americanregent.com,,medium,Large & mid-size pharma
+Exeltis USA,https://www.exeltisusa.com,,medium,Large & mid-size pharma
+Alvogen,https://www.alvogen.com,,medium,Large & mid-size pharma
+Mayne Pharma,https://www.maynepharma.com,,medium,Large & mid-size pharma
+Phibro Animal Health,https://www.pahc.com,,medium,Large & mid-size pharma
+Opella,https://www.opella.com,,medium,Large & mid-size pharma
+ALK-Abelló,https://www.alk.net,,medium,Large & mid-size pharma
+Stallergenes Greer,https://www.stallergenesgreer.com,,medium,Large & mid-size pharma
+Pharmacosmos,https://www.pharmacosmos.com,,medium,Large & mid-size pharma
+Alfasigma,https://www.alfasigma.com,,medium,Large & mid-size pharma
+Taiho Oncology,https://www.taihooncology.com,,medium,Large & mid-size pharma
+NS Pharma,https://www.nspharma.com,,medium,Large & mid-size pharma
+HUTCHMED,https://www.hutch-med.com,,medium,Large & mid-size pharma
+Zai Lab,https://www.zailaboratory.com,,medium,Large & mid-size pharma
+Ascend Laboratories,https://www.ascendlaboratories.com,,medium,Generics & specialty pharma
+Camber Pharmaceuticals,https://www.camberpharma.com,,medium,Generics & specialty pharma
+Novadoz Pharmaceuticals,https://www.novadozpharma.com,,medium,Generics & specialty pharma
+Strides Pharma,https://www.stridespharma.com,,medium,Generics & specialty pharma
+Alembic Pharmaceuticals,https://www.alembicusa.com,,medium,Generics & specialty pharma
+Ajanta Pharma USA,https://www.ajantapharmausa.com,,medium,Generics & specialty pharma
+Torrent Pharma,https://www.torrentpharma.com,,medium,Generics & specialty pharma
+Granules Pharmaceuticals,https://www.granulesindia.com,,medium,Generics & specialty pharma
+Xiromed,https://www.xiromed.com,,medium,Generics & specialty pharma
+Breckenridge Pharmaceutical,https://www.bpirx.com,,medium,Generics & specialty pharma
+Ingenus Pharmaceuticals,https://www.ingenus.com,,medium,Generics & specialty pharma
+Leading Pharma,https://www.leadingpharma.com,,medium,Generics & specialty pharma
+ANI Pharmaceuticals,https://www.anipharmaceuticals.com,,medium,Generics & specialty pharma
+Amphastar Pharmaceuticals,https://www.amphastar.com,,medium,Generics & specialty pharma
+Nephron Pharmaceuticals,https://www.nephronpharm.com,,medium,Generics & specialty pharma
+Upsher-Smith,https://www.upsher-smith.com,,medium,Generics & specialty pharma
+Tris Pharma,https://www.trispharma.com,,medium,Generics & specialty pharma
+ScieGen Pharmaceuticals,https://www.sciegenpharm.com,,medium,Generics & specialty pharma
+Epic Pharma,https://www.epic-pharma.com,,medium,Generics & specialty pharma
+Avet Pharmaceuticals,https://www.avetpharma.com,,medium,Generics & specialty pharma
+Rising Pharma,https://www.risingpharma.com,,medium,Generics & specialty pharma
+Prasco,https://www.prasco.com,,medium,Generics & specialty pharma
+PAI Pharmaceutical Associates,https://www.paipharma.com,,medium,Generics & specialty pharma
+Lannett,https://www.lannett.com,,medium,Generics & specialty pharma
+Jubilant Cadista,https://www.jubilantcadista.com,,medium,Generics & specialty pharma
+Cosette Pharmaceuticals,https://www.cosettepharma.com,,medium,Generics & specialty pharma
+Padagis,https://www.padagis.com,,medium,Generics & specialty pharma
+Meitheal Pharmaceuticals,https://www.meitheal.com,,medium,Generics & specialty pharma
+Civica Rx,https://www.civicarx.org,,medium,Generics & specialty pharma
+Phlow,https://www.phlow-usa.com,,medium,Generics & specialty pharma
+Aquestive Therapeutics,https://www.aquestive.com,,medium,Generics & specialty pharma
+Cumberland Pharmaceuticals,https://www.cumberlandpharma.com,,medium,Generics & specialty pharma
+Bionpharma,https://www.bionpharma.com,,medium,Generics & specialty pharma
+Solco Healthcare,https://www.solcohealthcare.com,,medium,Generics & specialty pharma
+Pacira BioSciences,https://www.pacira.com,,normal,Commercial biotech & specialty
+Collegium Pharmaceutical,https://www.collegiumpharma.com,,normal,Commercial biotech & specialty
+Supernus,https://www.supernus.com,,normal,Commercial biotech & specialty
+Harmony Biosciences,https://www.harmonybiosciences.com,,normal,Commercial biotech & specialty
+Catalyst Pharmaceuticals,https://www.catalystpharma.com,,normal,Commercial biotech & specialty
+Vanda Pharmaceuticals,https://www.vandapharma.com,,normal,Commercial biotech & specialty
+Axsome Therapeutics,https://www.axsome.com,,normal,Commercial biotech & specialty
+Xeris Biopharma,https://www.xerispharma.com,,normal,Commercial biotech & specialty
+Heron Therapeutics,https://www.herontx.com,,normal,Commercial biotech & specialty
+Esperion,https://www.esperion.com,,normal,Commercial biotech & specialty
+Ardelyx,https://www.ardelyx.com,,normal,Commercial biotech & specialty
+Theravance Biopharma,https://www.theravance.com,,normal,Commercial biotech & specialty
+Coherus BioSciences,https://www.coherus.com,,normal,Commercial biotech & specialty
+BioCryst,https://www.biocryst.com,,normal,Commercial biotech & specialty
+Madrigal Pharmaceuticals,https://www.madrigalpharma.com,,normal,Commercial biotech & specialty
+Verrica Pharmaceuticals,https://www.verrica.com,,normal,Commercial biotech & specialty
+Ocugen,https://www.ocugen.com,,normal,Commercial biotech & specialty
+Lexicon Pharmaceuticals,https://www.lexpharma.com,,normal,Commercial biotech & specialty
+Omeros,https://www.omeros.com,,normal,Commercial biotech & specialty
+Puma Biotechnology,https://www.pumabiotechnology.com,,normal,Commercial biotech & specialty
+Dynavax,https://www.dynavax.com,,normal,Commercial biotech & specialty
+ImmunityBio,https://www.immunitybio.com,,normal,Commercial biotech & specialty
+Geron,https://www.geron.com,,normal,Commercial biotech & specialty
+Exelixis,https://www.exelixis.com,,normal,Commercial biotech & specialty
+Neurocrine Biosciences,https://www.neurocrine.com,,normal,Commercial biotech & specialty
+Acadia Pharmaceuticals,https://www.acadia.com,,normal,Commercial biotech & specialty
+Halozyme,https://www.halozyme.com,,normal,Commercial biotech & specialty
+Nektar Therapeutics,https://www.nektar.com,,normal,Commercial biotech & specialty
+Arcturus Therapeutics,https://www.arcturusrx.com,,normal,Commercial biotech & specialty
+Vir Biotechnology,https://www.vir.bio,,normal,Commercial biotech & specialty
+PTC Therapeutics,https://www.ptcbio.com,,normal,Commercial biotech & specialty
+Amicus Therapeutics,https://www.amicusrx.com,,normal,Commercial biotech & specialty
+Apellis Pharmaceuticals,https://www.apellis.com,,normal,Commercial biotech & specialty
+Biohaven,https://www.biohaven.com,,normal,Commercial biotech & specialty
+Agios Pharmaceuticals,https://www.agios.com,,normal,Commercial biotech & specialty
+Rhythm Pharmaceuticals,https://www.rhythmtx.com,,normal,Commercial biotech & specialty
+Akebia Therapeutics,https://www.akebia.com,,normal,Commercial biotech & specialty
+Kiniksa Pharmaceuticals,https://www.kiniksa.com,,normal,Commercial biotech & specialty
+Syndax Pharmaceuticals,https://www.syndax.com,,normal,Commercial biotech & specialty
+Arvinas,https://www.arvinas.com,,normal,Commercial biotech & specialty
+REGENXBIO,https://www.regenxbio.com,,normal,Commercial biotech & specialty
+Precigen,https://www.precigen.com,,normal,Commercial biotech & specialty
+Arcellx,https://www.arcellx.com,,normal,Commercial biotech & specialty
+Y-mAbs Therapeutics,https://www.ymabs.com,,normal,Commercial biotech & specialty
+US WorldMeds,https://www.usworldmeds.com,,normal,Commercial biotech & specialty
+Eton Pharmaceuticals,https://www.etonpharma.com,,normal,Commercial biotech & specialty
+Zevra Therapeutics,https://www.zevra.com,,normal,Commercial biotech & specialty
+Amylyx Pharmaceuticals,https://www.amylyx.com,,normal,Commercial biotech & specialty
+Liquidia,https://www.liquidia.com,,normal,Commercial biotech & specialty
+Tonix Pharmaceuticals,https://www.tonixpharma.com,,normal,Commercial biotech & specialty
+Phathom Pharmaceuticals,https://www.phathompharma.com,,normal,Commercial biotech & specialty
+Rocket Pharmaceuticals,https://www.rocketpharma.com,,normal,Commercial biotech & specialty
+Vericel,https://www.vericel.com,,normal,Commercial biotech & specialty
+MiMedx,https://www.mimedx.com,,normal,Commercial biotech & specialty
+Organogenesis,https://www.organogenesis.com,,normal,Commercial biotech & specialty
+Paratek Pharmaceuticals,https://www.paratekpharma.com,,normal,Commercial biotech & specialty
+Agenus,https://www.agenusbio.com,,normal,Commercial biotech & specialty
+Inovio Pharmaceuticals,https://www.inovio.com,,normal,Commercial biotech & specialty
+TG Therapeutics,https://www.tgtherapeutics.com,,normal,Commercial biotech & specialty
+Soleno Therapeutics,https://www.soleno.life,,normal,Commercial biotech & specialty
+Arcutis Biotherapeutics,https://www.arcutis.com,,normal,Commercial biotech & specialty
+Tarsus Pharmaceuticals,https://www.tarsusrx.com,,normal,Commercial biotech & specialty
+Lantheus,https://www.lantheus.com,,normal,Commercial biotech & specialty
+Abeona Therapeutics,https://www.abeonatherapeutics.com,,normal,Commercial biotech & specialty
+Roivant,https://www.roivant.com,,normal,Commercial biotech & specialty
+Summit Therapeutics,https://www.smmttx.com,,normal,Commercial biotech & specialty
+Kalvista Pharmaceuticals,https://www.kalvista.com,,normal,Commercial biotech & specialty
+Ocular Therapeutix,https://www.ocutx.com,,normal,Commercial biotech & specialty
+EyePoint Pharmaceuticals,https://www.eyepointpharma.com,,normal,Commercial biotech & specialty
+Harrow,https://www.harrow.com,,normal,Commercial biotech & specialty
+Corium,https://www.corium.com,,normal,Commercial biotech & specialty
+Humacyte,https://www.humacyte.com,,normal,Commercial biotech & specialty
+ADC Therapeutics,https://www.adctherapeutics.com,,normal,Commercial biotech & specialty
+Aurinia Pharmaceuticals,https://www.auriniapharma.com,,normal,Commercial biotech & specialty
+uniQure,https://www.uniqure.com,,normal,Commercial biotech & specialty
+MeiraGTx,https://www.meiragtx.com,,normal,Commercial biotech & specialty
+Immatics,https://www.immatics.com,,normal,Commercial biotech & specialty
+CRISPR Therapeutics,https://www.crisprtx.com,,normal,Biotech - Massachusetts
+Editas Medicine,https://www.editasmedicine.com,,normal,Biotech - Massachusetts
+Beam Therapeutics,https://www.beamtx.com,,normal,Biotech - Massachusetts
+Prime Medicine,https://www.primemedicine.com,,normal,Biotech - Massachusetts
+bluebird bio,https://www.bluebirdbio.com,,normal,Biotech - Massachusetts
+Dyne Therapeutics,https://www.dyne-tx.com,,normal,Biotech - Massachusetts
+Stoke Therapeutics,https://www.stoketherapeutics.com,,normal,Biotech - Massachusetts
+Wave Life Sciences,https://www.wavelifesciences.com,,normal,Biotech - Massachusetts
+Kymera Therapeutics,https://www.kymeratx.com,,normal,Biotech - Massachusetts
+Mersana Therapeutics,https://www.mersana.com,,normal,Biotech - Massachusetts
+Keros Therapeutics,https://www.kerostx.com,,normal,Biotech - Massachusetts
+Cullinan Therapeutics,https://www.cullinantherapeutics.com,,normal,Biotech - Massachusetts
+Praxis Precision Medicines,https://www.praxismedicines.com,,normal,Biotech - Massachusetts
+Disc Medicine,https://www.discmedicine.com,,normal,Biotech - Massachusetts
+Bicycle Therapeutics,https://www.bicycletherapeutics.com,,normal,Biotech - Massachusetts
+Foghorn Therapeutics,https://www.foghorntx.com,,normal,Biotech - Massachusetts
+Generation Bio,https://www.generationbio.com,,normal,Biotech - Massachusetts
+Tango Therapeutics,https://www.tangotx.com,,normal,Biotech - Massachusetts
+Fulcrum Therapeutics,https://www.fulcrumtx.com,,normal,Biotech - Massachusetts
+Cogent Biosciences,https://www.cogentbio.com,,normal,Biotech - Massachusetts
+Vor Bio,https://www.vorbio.com,,normal,Biotech - Massachusetts
+Cartesian Therapeutics,https://www.cartesiantherapeutics.com,,normal,Biotech - Massachusetts
+Xilio Therapeutics,https://www.xiliotx.com,,normal,Biotech - Massachusetts
+Spero Therapeutics,https://www.sperotherapeutics.com,,normal,Biotech - Massachusetts
+Atea Pharmaceuticals,https://www.ateapharma.com,,normal,Biotech - Massachusetts
+Enanta Pharmaceuticals,https://www.enanta.com,,normal,Biotech - Massachusetts
+Candel Therapeutics,https://www.candeltx.com,,normal,Biotech - Massachusetts
+Solid Biosciences,https://www.solidbio.com,,normal,Biotech - Massachusetts
+Rapport Therapeutics,https://www.rapportrx.com,,normal,Biotech - Massachusetts
+Upstream Bio,https://www.upstreambio.com,,normal,Biotech - Massachusetts
+Nuvalent,https://www.nuvalent.com,,normal,Biotech - Massachusetts
+Viridian Therapeutics,https://www.viridiantherapeutics.com,,normal,Biotech - Massachusetts
+TScan Therapeutics,https://www.tscan.com,,normal,Biotech - Massachusetts
+Xenon Pharmaceuticals,https://www.xenon-pharma.com,,normal,Biotech - Massachusetts
+ElevateBio,https://www.elevate.bio,,normal,Biotech - Massachusetts
+Landmark Bio,https://www.landmarkbio.com,,normal,Biotech - Massachusetts
+Merus,https://www.merus.nl,,normal,Biotech - Massachusetts
+Generate Biomedicines,https://www.generatebiomedicines.com,,normal,Biotech - Massachusetts
+Lyndra Therapeutics,https://www.lyndra.com,,normal,Biotech - Massachusetts
+Kura Oncology,https://www.kuraoncology.com,,normal,Biotech - California
+Viking Therapeutics,https://www.vikingtherapeutics.com,,normal,Biotech - California
+Sutro Biopharma,https://www.sutrobio.com,,normal,Biotech - California
+Denali Therapeutics,https://www.denalitherapeutics.com,,normal,Biotech - California
+Alector,https://www.alector.com,,normal,Biotech - California
+Sangamo Therapeutics,https://www.sangamo.com,,normal,Biotech - California
+Nkarta,https://www.nkartatx.com,,normal,Biotech - California
+Kodiak Sciences,https://www.kodiak.com,,normal,Biotech - California
+Alumis,https://www.alumis.com,,normal,Biotech - California
+Septerna,https://www.septerna.com,,normal,Biotech - California
+Lyell Immunopharma,https://www.lyell.com,,normal,Biotech - California
+Kyverna Therapeutics,https://www.kyvernatx.com,,normal,Biotech - California
+Gossamer Bio,https://www.gossamerbio.com,,normal,Biotech - California
+Ventyx Biosciences,https://www.ventyxbio.com,,normal,Biotech - California
+Apogee Therapeutics,https://www.apogeetherapeutics.com,,normal,Biotech - California
+Olema Oncology,https://www.olema.com,,normal,Biotech - California
+Erasca,https://www.erasca.com,,normal,Biotech - California
+Protagonist Therapeutics,https://www.protagonist-inc.com,,normal,Biotech - California
+Annexon Biosciences,https://www.annexonbio.com,,normal,Biotech - California
+Vaxcyte,https://www.vaxcyte.com,,normal,Biotech - California
+Pliant Therapeutics,https://www.pliantrx.com,,normal,Biotech - California
+4D Molecular Therapeutics,https://www.4dmoleculartherapeutics.com,,normal,Biotech - California
+Structure Therapeutics,https://www.structuretx.com,,normal,Biotech - California
+aTyr Pharma,https://www.atyrpharma.com,,normal,Biotech - California
+Janux Therapeutics,https://www.januxrx.com,,normal,Biotech - California
+IDEAYA Biosciences,https://www.ideayabio.com,,normal,Biotech - California
+Vera Therapeutics,https://www.veratx.com,,normal,Biotech - California
+Orca Bio,https://www.orcabio.com,,normal,Biotech - California
+Caribou Biosciences,https://www.cariboubio.com,,normal,Biotech - California
+Metagenomi,https://www.metagenomi.co,,normal,Biotech - California
+Zymeworks,https://www.zymeworks.com,,normal,Biotech - California
+Sana Biotechnology,https://www.sana.com,,normal,Biotech - other US
+Immunome,https://www.immunome.com,,normal,Biotech - other US
+Recursion,https://www.recursion.com,,normal,Biotech - other US
+Cabaletta Bio,https://www.cabalettabio.com,,normal,Biotech - other US
+Passage Bio,https://www.passagebio.com,,normal,Biotech - other US
+Larimar Therapeutics,https://www.larimartx.com,,normal,Biotech - other US
+Mineralys Therapeutics,https://www.mineralystx.com,,normal,Biotech - other US
+Precision BioSciences,https://www.precisionbiosciences.com,,normal,Biotech - other US
+AskBio,https://www.askbio.com,,normal,Biotech - other US
+Lexeo Therapeutics,https://www.lexeotx.com,,normal,Biotech - other US
+Applied Therapeutics,https://www.appliedtherapeutics.com,,normal,Biotech - other US
+Neurogene,https://www.neurogene.com,,normal,Biotech - other US
+Taysha Gene Therapies,https://www.tayshagtx.com,,normal,Biotech - other US
+ProKidney,https://www.prokidney.com,,normal,Biotech - other US
+Celcuity,https://www.celcuity.com,,normal,Biotech - other US
+Edgewise Therapeutics,https://www.edgewisetx.com,,normal,Biotech - other US
+Autolus Therapeutics,https://www.autolus.com,,normal,Biotech - other US
+Kriya Therapeutics,https://www.kriyatx.com,,normal,Biotech - other US
+WuXi Biologics,https://www.wuxibiologics.com,,medium,"CDMO, manufacturing & suppliers"
+WuXi AppTec,https://www.wuxiapptec.com,,medium,"CDMO, manufacturing & suppliers"
+Andelyn Biosciences,https://www.andelynbio.com,,medium,"CDMO, manufacturing & suppliers"
+SK pharmteco,https://www.skpharmteco.com,,medium,"CDMO, manufacturing & suppliers"
+Simtra BioPharma Solutions,https://www.simtra.com,,medium,"CDMO, manufacturing & suppliers"
+Sharp Services,https://www.sharpservices.com,,medium,"CDMO, manufacturing & suppliers"
+Almac Group,https://www.almacgroup.com,,medium,"CDMO, manufacturing & suppliers"
+Quotient Sciences,https://www.quotientsciences.com,,medium,"CDMO, manufacturing & suppliers"
+Pharmaron,https://www.pharmaron.com,,medium,"CDMO, manufacturing & suppliers"
+Corden Pharma,https://www.cordenpharma.com,,medium,"CDMO, manufacturing & suppliers"
+CoreRx,https://www.corerxpharma.com,,medium,"CDMO, manufacturing & suppliers"
+Frontida BioPharm,https://www.frontidabiopharm.com,,medium,"CDMO, manufacturing & suppliers"
+Cytovance Biologics,https://www.cytovance.com,,medium,"CDMO, manufacturing & suppliers"
+Bachem,https://www.bachem.com,,medium,"CDMO, manufacturing & suppliers"
+PolyPeptide Group,https://www.polypeptide.com,,medium,"CDMO, manufacturing & suppliers"
+Cellares,https://www.cellares.com,,medium,"CDMO, manufacturing & suppliers"
+Abzena,https://www.abzena.com,,medium,"CDMO, manufacturing & suppliers"
+Kindeva Drug Delivery,https://www.kindevadd.com,,medium,"CDMO, manufacturing & suppliers"
+Just-Evotec Biologics,https://www.evotec.com,,medium,"CDMO, manufacturing & suppliers"
+Aldevron,https://www.aldevron.com,,medium,"CDMO, manufacturing & suppliers"
+Oxford Biomedica,https://www.oxb.com,,medium,"CDMO, manufacturing & suppliers"
+Cytiva,https://www.cytiva.com,,medium,"CDMO, manufacturing & suppliers"
+Repligen,https://www.repligen.com,,medium,"CDMO, manufacturing & suppliers"
+Avantor,https://www.avantorsciences.com,,medium,"CDMO, manufacturing & suppliers"
+Bio-Techne,https://www.bio-techne.com,,medium,"CDMO, manufacturing & suppliers"
+Vetter Pharma,https://www.vetter-pharma.com,,medium,"CDMO, manufacturing & suppliers"
+Lifecore Biomedical,https://www.lifecore.com,,medium,"CDMO, manufacturing & suppliers"
+Mikart,https://www.mikart.com,,medium,"CDMO, manufacturing & suppliers"
+Sagent Pharmaceuticals,https://www.sagentpharma.com,,medium,"CDMO, manufacturing & suppliers"
+Piramal Critical Care,https://www.piramalcriticalcare.com,,medium,"CDMO, manufacturing & suppliers"
+QuVa Pharma,https://www.quvapharma.com,,medium,"CDMO, manufacturing & suppliers"
+SCA Pharmaceuticals,https://www.scapharma.com,,medium,"CDMO, manufacturing & suppliers"
+Leiters Health,https://www.leiters.com,,medium,"CDMO, manufacturing & suppliers"
+Promega,https://www.promega.com,,medium,"CDMO, manufacturing & suppliers"
+Azenta Life Sciences,https://www.azenta.com,,medium,"CDMO, manufacturing & suppliers"
+Sartorius,https://www.sartorius.com,,medium,"CDMO, manufacturing & suppliers"
+Curium,https://www.curiumpharma.com,,medium,Radiopharma
+NorthStar Medical Radioisotopes,https://www.northstarnm.com,,medium,Radiopharma
+Jubilant Radiopharma,https://www.jubilantradiopharma.com,,medium,Radiopharma
+Telix Pharmaceuticals,https://www.telixpharma.com,,medium,Radiopharma
+SOFIE,https://www.sofie.com,,medium,Radiopharma
+Perspective Therapeutics,https://www.perspectivetherapeutics.com,,medium,Radiopharma
+Parexel,https://www.parexel.com,,normal,CRO & testing labs
+Fortrea,https://www.fortrea.com,,normal,CRO & testing labs
+ICON,https://www.iconplc.com,,normal,CRO & testing labs
+Medpace,https://www.medpace.com,,normal,CRO & testing labs
+Labcorp,https://www.labcorp.com,,normal,CRO & testing labs
+Worldwide Clinical Trials,https://www.worldwide.com,,normal,CRO & testing labs
+Premier Research,https://www.premier-research.com,,normal,CRO & testing labs
+Precision for Medicine,https://www.precisionformedicine.com,,normal,CRO & testing labs
+Altasciences,https://www.altasciences.com,,normal,CRO & testing labs
+Allucent,https://www.allucent.com,,normal,CRO & testing labs
+Caidya,https://www.caidya.com,,normal,CRO & testing labs
+Emmes,https://www.emmes.com,,normal,CRO & testing labs
+Rho,https://www.rhoworld.com,,normal,CRO & testing labs
+QPS,https://www.qps.com,,normal,CRO & testing labs
+Celerion,https://www.celerion.com,,normal,CRO & testing labs
+Q2 Solutions,https://www.q2labsolutions.com,,normal,CRO & testing labs
+Eurofins,https://www.eurofinsus.com,,normal,CRO & testing labs
+SGS,https://www.sgs.com,,normal,CRO & testing labs
+BioAgilytix,https://www.bioagilytix.com,,normal,CRO & testing labs
+Frontage Laboratories,https://www.frontagelab.com,,normal,CRO & testing labs
+Inotiv,https://www.inotivco.com,,normal,CRO & testing labs
+Advarra,https://www.advarra.com,,normal,CRO & testing labs
+WCG Clinical,https://www.wcgclinical.com,,normal,CRO & testing labs
+Veristat,https://www.veristat.com,,normal,CRO & testing labs
+Catalyst Clinical Research,https://www.catalystcr.com,,normal,CRO & testing labs
+Pace Analytical,https://www.pacelabs.com,,normal,CRO & testing labs
+Boston Analytical,https://www.bostonanalytical.com,,normal,CRO & testing labs
+USP (US Pharmacopeia),https://www.usp.org,,normal,CRO & testing labs
+Advanced Clinical,https://www.advancedclinical.com,,normal,CRO & testing labs
+PharmaLex,https://www.pharmalex.com,,normal,Regulatory & quality consulting
+Certara,https://www.certara.com,,normal,Regulatory & quality consulting
+Freyr Solutions,https://www.freyrsolutions.com,,normal,Regulatory & quality consulting
+Syner-G BioPharma Group,https://www.synergbiopharma.com,,normal,Regulatory & quality consulting
+Halloran Consulting Group,https://www.hallorancg.com,,normal,Regulatory & quality consulting
+Biologics Consulting,https://www.biologicsconsulting.com,,normal,Regulatory & quality consulting
+ProPharma Group,https://www.propharmagroup.com,,normal,Regulatory & quality consulting
+Lachman Consultants,https://www.lachmanconsultants.com,,normal,Regulatory & quality consulting
+Camargo Pharmaceutical Services,https://www.camargopharma.com,,normal,Regulatory & quality consulting
+EAS Consulting Group,https://www.easconsultinggroup.com,,normal,Regulatory & quality consulting
+The FDA Group,https://www.thefdagroup.com,,normal,Regulatory & quality consulting
+Clarkston Consulting,https://www.clarkstonconsulting.com,,normal,Regulatory & quality consulting
+Azzur Group,https://www.azzur.com,,normal,Regulatory & quality consulting
+CAI,https://www.cagents.com,,normal,Regulatory & quality consulting
+Verista,https://www.verista.com,,normal,Regulatory & quality consulting
+Validant,https://www.validant.com,,normal,Regulatory & quality consulting
+PSC Biotech,https://www.pscbiotech.com,,normal,Regulatory & quality consulting
+Valsource,https://www.valsource.com,,normal,Regulatory & quality consulting
+IPS - Integrated Project Services,https://www.ipsdb.com,,normal,Regulatory & quality consulting
+Tunnell Consulting,https://www.tunnellconsulting.com,,normal,Regulatory & quality consulting
+Kymanox,https://www.kymanox.com,,normal,Regulatory & quality consulting
+USDM Life Sciences,https://www.usdm.com,,normal,Regulatory & quality consulting
+Regulatory Compliance Associates,https://www.rcainc.com,,normal,Regulatory & quality consulting
+ValGenesis,https://www.valgenesis.com,,normal,Regulatory & quality consulting
+CRB,https://www.crbgroup.com,,normal,Regulatory & quality consulting
+NNE,https://www.nne.com,,normal,Regulatory & quality consulting
+Voisin Consulting Life Sciences,https://www.voisinconsulting.com,,normal,Regulatory & quality consulting
+Planet Pharma,https://www.planet-pharma.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
+ProClinical,https://www.proclinical.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
+BioPhase Solutions,https://www.biophase.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
+Joulé,https://www.jouleinc.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
+Real Life Sciences,https://www.realstaffing.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
+Mindlance,https://www.mindlance.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
+Artech,https://www.artech.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
+Yoh,https://www.yoh.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
+Collabera,https://www.collabera.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
+Actalent,https://www.actalentservices.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
+Medix,https://www.medixteam.com,,normal,"Life-sciences recruiters (contract roles, often no sponsorship)"
