@@ -1415,6 +1415,18 @@ def build_filters(cfg: dict) -> dict:
             for key in ("include", "exclude", "location_include", "location_exclude")}
 
 
+def plain_title(job: Job) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", job.title.lower()).strip()
+
+
+def url_key(url: str) -> str:
+    """The job's address without tracking bits, so the same posting matches under any company name."""
+    p = urlparse(url or "")
+    keep = sorted((k, v) for k, v in parse_qsl(p.query) if re.search(r"id|job|req", k, re.I))
+    return (p.netloc.lower().removeprefix("www.") + p.path.rstrip("/").lower()
+            + ("?" + "&".join(f"{k}={v}" for k, v in keep) if keep else ""))
+
+
 def title_key(job: Job) -> str:
     """Same title at the same location counts as the same job, even under a new job ID."""
     return re.sub(r"[^a-z0-9]+", " ", f"{job.title} | {job.location}".lower()).strip()
@@ -1610,16 +1622,22 @@ def job_card(name: str, j: Job) -> str:
 </table>"""
 
 
-def build_email(new, manual, full_manual_list, checked, ok, when, max_age) -> str:
-    """The email version: a header, then one card per job, grouped by role type."""
+def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
+                recruiters=frozenset(), per_recruiter=3) -> str:
+    """The email version: a header, then one card per job, grouped by role type.
+    Jobs from recruiters and consulting firms come last, a few per firm."""
     esc = html.escape
+    agency = [(n, j) for n, j in new if n in recruiters]
+    new = [(n, j) for n, j in new if n not in recruiters]
     counts = {}
     for _, j in new:
         counts[role_family(j.title)] = counts.get(role_family(j.title), 0) + 1
-    if new:
+    if new or agency:
         headline = f"{len(new)} new job{'s' if len(new) != 1 else ''} for you"
         summary = "".join(badge(f"{n} {FAMILIES[f][0]}", FAMILIES[f][1], FAMILIES[f][2])
                           for f, n in counts.items())
+        if agency:
+            summary += badge(f"{len(agency)} from recruiters & consultancies", "#475467", "#eaecf0")
     else:
         headline, summary = "No new jobs this check", ""
     body = []
@@ -1630,7 +1648,19 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age) -> st
         body.append(f'<div style="margin:22px 0 10px;font-family:{FONT};font-size:13px;font-weight:700;'
                     f'letter-spacing:.05em;text-transform:uppercase;color:{color}">{esc(label)} ({len(jobs)})</div>')
         body.extend(job_card(n, j) for n, j in jobs)
-    if not new:
+    if agency:
+        body.append(f'<div style="margin:26px 0 10px;font-family:{FONT};font-size:13px;font-weight:700;'
+                    f'letter-spacing:.05em;text-transform:uppercase;color:#475467">'
+                    f'From recruiters & consultancies ({len(agency)})</div>')
+        firms: dict[str, list[Job]] = {}
+        for n, j in agency:
+            firms.setdefault(n, []).append(j)
+        for n, jobs in firms.items():
+            body.extend(job_card(n, j) for j in jobs[:per_recruiter])
+            if len(jobs) > per_recruiter:
+                body.append(f'<div style="margin:-4px 0 12px;font-family:{FONT};font-size:13px;color:#667085">'
+                            f'+{len(jobs) - per_recruiter} more matching jobs at {esc(n)} (all in jobs_log.csv)</div>')
+    if not new and not agency:
         body.append(f'<div style="margin:16px 0;font-family:{FONT};font-size:15px;color:#344054">'
                     f'Nothing new matching your roles was posted in the last {max_age:g} hours.</div>')
     if manual and full_manual_list:
@@ -1672,9 +1702,11 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age) -> st
 </body></html>"""
 
 
-def build_message(new, manual, full_manual_list, companies, max_age, checked, ok, when):
-    """The message sent after every run: new jobs (or "no new jobs"), then the check-by-hand list."""
-    order = {c["name"]: i for i, c in enumerate(companies)}
+def build_message(new, manual, full_manual_list, companies, max_age, checked, ok, when,
+                  recruiters=frozenset(), per_recruiter=3):
+    """The message sent after every run: new jobs (or "no new jobs"), then the check-by-hand list.
+    Direct employers first; recruiters and consulting firms last, a few jobs each."""
+    order = {c["name"]: i + (100000 if c["name"] in recruiters else 0) for i, c in enumerate(companies)}
     text, rich = [], ['<div style="font-family:Calibri,Arial,sans-serif;font-size:15px">']
     esc = html.escape
 
@@ -1686,7 +1718,10 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
         text.append(heading.upper())
         rich.append(f"<h3>{esc(heading)}</h3>")
         for name, jobs in groups.items():
-            text.append(f"\n{name}")
+            hidden = 0
+            if name in recruiters and len(jobs) > per_recruiter:
+                jobs, hidden = jobs[:per_recruiter], len(jobs) - per_recruiter
+            text.append(f"\n{name}" + (" (recruiter / consultancy)" if name in recruiters else ""))
             rich.append(f"<p style='margin:12px 0 4px'><b>{esc(name)}</b></p><ul style='margin-top:0'>")
             for j in jobs:
                 extra = " - ".join(x for x in (j.location, age_text(j)) if x)
@@ -1697,6 +1732,8 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
                 rich.append(f'<li><a href="{esc(j.url)}">{esc(j.title)}</a>'
                             + (f" <span style='color:#666'>- {esc(extra)}</span>" if extra else "")
                             + (f"<br><span style='color:{color}'>{esc(note)}</span>" if note else "") + "</li>")
+            if hidden:
+                text.append(f"  + {hidden} more at {name} (all in jobs_log.csv)")
             rich.append("</ul>")
     else:
         line = (f"No new openings. Checked {ok} of {checked} companies at {when}: nothing new matching "
@@ -1721,13 +1758,18 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
     rich.append("</div>")
 
     if new:
-        names = list(dict.fromkeys(n for n, _ in new))
+        direct = [n for n, _ in new if n not in recruiters]
+        names = list(dict.fromkeys(direct or [n for n, _ in new]))
         who = ", ".join(names[:3]) + (f" +{len(names) - 3} more" if len(names) > 3 else "")
-        subject = f"{len(new)} new job match{'es' if len(new) != 1 else ''}: {who}"
+        agency_count = len(new) - len(direct)
+        subject = (f"{len(direct)} new job match{'es' if len(direct) != 1 else ''}: {who}" if direct
+                   else f"{agency_count} new recruiter job{'s' if agency_count != 1 else ''}: {who}")
+        if direct and agency_count:
+            subject += f" (+{agency_count} from recruiters)"
     else:
         subject = f"No new jobs ({when} check)"
     click = new[0][1].url if len(new) == 1 else None
-    rich = build_email(new, manual, full_manual_list, checked, ok, when, max_age)
+    rich = build_email(new, manual, full_manual_list, checked, ok, when, max_age, recruiters, per_recruiter)
     return subject, "\n".join(text).strip(), rich, click
 
 
@@ -1741,18 +1783,32 @@ def write_manual_file(manual, since):
 
 def send_resend(subject: str, text: str, rich: str, to: str, key: str):
     """Email through Resend's web API (works from GitHub, where Gmail's mail server often hangs up)."""
+    key = key.strip().strip('"').strip("'")
+    if key.lower().startswith("bearer "):
+        key = key[7:].strip()
     try:
-        http("POST", "https://api.resend.com/emails", tries=2,
-             headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-             json={"from": "Job Watch <onboarding@resend.dev>", "to": [to], "subject": subject,
-                   "html": rich, "text": text})
-    except RuntimeError as e:
-        if "HTTP 401" in str(e) or "HTTP 400" in str(e):
-            raise RuntimeError("Resend didn't accept the RESEND_API_KEY secret. Create a new API key and replace it")
-        if "HTTP 403" in str(e):
-            raise RuntimeError("Resend's free plan only sends to the email address you signed up to Resend with. "
-                               "Set the EMAIL_TO secret to exactly that address")
-        raise
+        r = requests.post("https://api.resend.com/emails", timeout=30,
+                          headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json",
+                                   "User-Agent": USER_AGENT},
+                          json={"from": "Job Watch <onboarding@resend.dev>", "to": [to], "subject": subject,
+                                "html": rich, "text": text})
+    except requests.RequestException as e:
+        raise RuntimeError(f"couldn't reach Resend ({type(e).__name__})")
+    if r.status_code < 300:
+        return
+    try:
+        detail = r.json().get("message") or r.text
+    except ValueError:
+        detail = r.text
+    detail = clean(str(detail))[:200]
+    hint = ""
+    if not key.startswith("re_"):
+        hint = " The RESEND_API_KEY secret should start with re_: paste the full key, nothing else."
+    elif r.status_code in (401, 403) and "own email" not in detail.lower() and "testing emails" not in detail.lower():
+        hint = " Create a new API key in Resend (sending access, all domains) and replace the RESEND_API_KEY secret."
+    elif "own email" in detail.lower() or "testing emails" in detail.lower():
+        hint = " Set the EMAIL_TO secret to exactly the email address you signed up to Resend with."
+    raise RuntimeError(f"Resend said: {detail} (HTTP {r.status_code}).{hint}")
 
 
 def send_email(subject: str, text: str, rich: str, to: str):
@@ -1822,6 +1878,23 @@ def notify(subject: str, text: str, rich: str, click: str | None = None, quiet: 
         problems.append("Email didn't send: the EMAIL_TO secret is missing. Its name must be exactly EMAIL_TO")
     else:
         print("Email: not set up (no EMAIL_TO, SMTP_USER or SMTP_PASSWORD secrets)")
+    for i in range(2, 6):  # more people: EMAIL_TO_2 with RESEND_API_KEY_2 (their own Resend key), up to _5
+        extra_to = os.environ.get(f"EMAIL_TO_{i}", "").strip()
+        if not extra_to or not email:
+            continue
+        extra_key = os.environ.get(f"RESEND_API_KEY_{i}", "").strip() or resend_key
+        if not extra_key:
+            problems.append(f"Email to person {i} didn't send: add the RESEND_API_KEY_{i} secret "
+                            "(their own Resend key)")
+            continue
+        try:
+            send_resend(subject, text, rich, extra_to, extra_key)
+            delivered += 1
+            print(f"Email: sent to person {i}")
+        except Exception as e:
+            problems.append(f"Email to person {i} didn't send: " + str(e)
+                            .replace("the EMAIL_TO secret", f"the EMAIL_TO_{i} secret")
+                            .replace("the RESEND_API_KEY secret", f"the RESEND_API_KEY_{i} secret"))
     topic = os.environ.get("NTFY_TOPIC", "").strip()
     if topic:
         body = text if len(text) <= 3500 else text[:3400] + "\n...(list cut short; the email has all of it)"
@@ -1877,9 +1950,16 @@ def run(args) -> int:
     failures = state.setdefault("failures", {})
     counts = state.setdefault("counts", {})
     addresses = state.setdefault("addresses", {})  # job boards found from homepages, reused next run
+    sent_urls = state.setdefault("sent_urls", {})  # links of every job sent, across all companies
+    never_repeat_title = bool(cfg.get("never_repeat_title", True))
     global NOW
     NOW = datetime.now(timezone.utc)
     stamp = NOW.isoformat(timespec="seconds")
+    gap = float(cfg.get("min_hours_between_scheduled_runs", 2.5))
+    if (not args.check and os.environ.get("GITHUB_EVENT_NAME") == "schedule" and state.get("last_run")
+            and (NOW - datetime.fromisoformat(state["last_run"])).total_seconds() < gap * 3600):
+        print(f"Backup timer: a run already happened at {state['last_run']}, so this one stands down.")
+        return 0
     max_age = float(cfg.get("max_age_hours") or 0)
     started = time.time()
 
@@ -1938,11 +2018,12 @@ def run(args) -> int:
         sent = sent_all.setdefault(name, {})
         statuses = []
         for j in hits:
-            key = title_key(j)
+            key, tkey, ukey = title_key(j), "t:" + plain_title(j), url_key(j.url)
             if legacy and j.id in seen:
                 sent.setdefault(key, seen[j.id])  # the first version sent everything it recorded
-            if key in sent:  # same job, or the same title and location re-posted under a new ID
-                status = "same as one above" if sent[key] == stamp else "already sent"
+            earlier = sent.get(key) or (sent.get(tkey) if never_repeat_title else None) or sent_urls.get(ukey)
+            if earlier:  # same job: same title+location, same title at this company, or the same link anywhere
+                status = "same as one above" if earlier == stamp else "already sent"
             elif j.id in seen:
                 status = "seen before"
             elif j.posted_at and max_age and (NOW - j.posted_at).total_seconds() > max_age * 3600:
@@ -1952,7 +2033,7 @@ def run(args) -> int:
             else:
                 status = "NEW"
                 new.append((name, j))
-                sent[key] = stamp
+                sent[key] = sent[tkey] = sent_urls[ukey] = stamp
             seen.setdefault(j.id, stamp)
             statuses.append((j, status))
         if args.check:
@@ -1969,8 +2050,10 @@ def run(args) -> int:
             seen = seen_all.setdefault(name, {})
             sent = sent_all.setdefault(name, {})
             key = title_key(j)
-            plain_title = re.sub(r"[^a-z0-9]+", " ", j.title.lower()).strip()
-            already = key in sent or any(k.startswith(plain_title) for k in sent)  # found on the career site too
+            bare = plain_title(j)
+            ukey, tkey = url_key(j.url), "t:" + bare
+            already = (key in sent or ukey in sent_urls or (never_repeat_title and tkey in sent)
+                       or any(k.startswith(bare) for k in sent))  # found on the career site too
             if already or j.id in seen:
                 seen.setdefault(j.id, stamp)
                 continue
@@ -1978,7 +2061,7 @@ def run(args) -> int:
             if j.posted_at and max_age and (NOW - j.posted_at).total_seconds() > max_age * 3600:
                 continue
             new.append((name, j))
-            sent[key] = stamp
+            sent[key] = sent[tkey] = sent_urls[ukey] = stamp
             if args.check:
                 print(f"   + [Adzuna] {name}: {j.title} ({j.location})\n       {j.url}")
     read_descriptions([j for _, j in new])
@@ -1987,7 +2070,9 @@ def run(args) -> int:
         reason = skip_reason(j, filters, cfg)
         if reason:
             skipped[j.id] = reason
-            sent_all.get(name, {}).pop(title_key(j), None)  # never sent, so don't block a later re-post
+            for k in (title_key(j), "t:" + plain_title(j)):  # never sent, so don't block a later re-post
+                sent_all.get(name, {}).pop(k, None)
+            sent_urls.pop(url_key(j.url), None)
     if skipped:
         counts_by_reason = {}
         for reason in skipped.values():
@@ -2029,8 +2114,14 @@ def run(args) -> int:
     full_list = bool(manual) and (names != state.get("manual_last_list")
                                   or (local.hour >= 8 and state.get("manual_last_date") != today))
 
+    recruiters = {c["name"] for c in all_companies
+                  if re.search(r"recruit|staffing|consult", c.get("group", ""), re.I)}
+    recruiters |= set(cfg.get("recruiter_companies", []))
+    if not cfg.get("include_recruiters", True):
+        new = [(n, j) for n, j in new if n not in recruiters]
     subject, text, rich, click = build_message(new, manual, full_list, all_companies, max_age,
-                                               len(attempted), ok, when)
+                                               len(attempted), ok, when, recruiters,
+                                               int(cfg.get("max_jobs_per_recruiter", 3)))
     if cfg.get("browser_fallback", True):
         b = BROWSER_STATS
         if not browser_available():

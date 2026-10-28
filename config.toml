@@ -97,6 +97,19 @@ adzuna_any_company = false
 quiet_logs = true
 log_sponsorship = false
 
+# Never repeat: a job counts as already sent if its link was sent before (under any company name),
+# or this company already sent the same job title at any location.
+never_repeat_title = true
+
+# Recruiters and consulting firms (the groups in companies.csv with "recruit" or "consult" in the name)
+# come last in each email, with at most this many jobs per firm. Set include_recruiters = false to drop them.
+include_recruiters = true
+max_jobs_per_recruiter = 3
+
+# GitHub's own timer is a backup for the outside timer (cron-job.org): if a run happened within
+# this many hours, a GitHub-timer run stands down, so you never get two emails for one slot.
+min_hours_between_scheduled_runs = 2.5
+
 # Email (if set up) only arrives when there are new jobs. Set to true to also get "no new jobs" emails.
 email_every_run = true
 

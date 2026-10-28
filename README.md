@@ -84,6 +84,10 @@ Windows: use Task Scheduler to run `python job_watch.py` in this folder every 3 
 
 This setup is meant for a public repository, where GitHub minutes are unlimited: every company is checked every 3 hours (`medium_interval_hours` and `normal_interval_hours` = 3), runs may take up to 25 minutes, and the browser searches JavaScript career sites more deeply. Because anyone can read a public repository and its run logs, the logs show only counts (`quiet_logs = true`), and `jobs_log.csv` leaves out the sponsorship columns (`log_sponsorship = false`). The sponsorship notes are still in your emails. Never upload a `jobs_log.csv` that has sponsorship columns to a public repository.
 
+## Exact 3-hour timing
+
+GitHub's built-in timer can start scheduled runs late or skip them when it's busy. For exact timing, an outside timer (cron-job.org, free) starts the workflow every 3 hours through GitHub's API. The GitHub timer stays on as a backup: if a run already happened in the last 2.5 hours (`min_hours_between_scheduled_runs`), a GitHub-timer run stops right away, so you never get two emails for one slot.
+
 ## Second source: Adzuna
 
 Some career sites can't be read automatically. To cover them, each run also searches Adzuna, a large job search engine that collects postings from company career sites and job boards, for your job titles across the US (postings from the last day). Results from companies in `companies.csv` go through the same filters and duplicate checks as everything else, so a job found both ways is sent once. Get a free key at developer.adzuna.com and add two repository secrets, `ADZUNA_APP_ID` and `ADZUNA_APP_KEY`. The free plan allows 2,500 searches a month; 8 searches a run (`adzuna_max_calls_per_run`) is about 1,900. Set `adzuna_any_company = true` to see matching jobs from any US employer, not just your list.
