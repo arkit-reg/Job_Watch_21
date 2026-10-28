@@ -33,6 +33,8 @@ jobs:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO_2: ${{ secrets.EMAIL_TO_2 }}
+          RESEND_API_KEY_2: ${{ secrets.RESEND_API_KEY_2 }}
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
           ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
       - name: Save seen jobs and the job log
