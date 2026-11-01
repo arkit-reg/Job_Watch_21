@@ -88,6 +88,10 @@ This setup is meant for a public repository, where GitHub minutes are unlimited:
 
 GitHub's built-in timer can start scheduled runs late or skip them when it's busy. For exact timing, an outside timer (cron-job.org, free) starts the workflow every 3 hours through GitHub's API. The GitHub timer stays on as a backup: if a run already happened in the last 2.5 hours (`min_hours_between_scheduled_runs`), a GitHub-timer run stops right away, so you never get two emails for one slot.
 
+## Third source: JSearch (Google Jobs data)
+
+JSearch returns Google Jobs results, which collect postings from LinkedIn, Indeed, Glassdoor, ZipRecruiter and company career sites. With `jsearch_any_company = true`, it keeps pharma/biotech postings (GMP, FDA, biologics, CDMO and similar wording) from any US employer, not just `companies.csv`. Get a key: sign up at rapidapi.com, open the JSearch API, subscribe to the free Basic plan (200 searches a month), copy your `X-RapidAPI-Key`, and add it as the repository secret `RAPIDAPI_KEY`. It runs 3 searches in each of two daily time slots (`jsearch_hours`, Eastern time), about 180 a month.
+
 ## Second source: Adzuna
 
 Some career sites can't be read automatically. To cover them, each run also searches Adzuna, a large job search engine that collects postings from company career sites and job boards, for your job titles across the US (postings from the last day). Results from companies in `companies.csv` go through the same filters and duplicate checks as everything else, so a job found both ways is sent once. Get a free key at developer.adzuna.com and add two repository secrets, `ADZUNA_APP_ID` and `ADZUNA_APP_KEY`. The free plan allows 2,500 searches a month; 8 searches a run (`adzuna_max_calls_per_run`) is about 1,900. Set `adzuna_any_company = true` to see matching jobs from any US employer, not just your list.

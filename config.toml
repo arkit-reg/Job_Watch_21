@@ -47,7 +47,7 @@ exclude = [
 # skip jobs outside the US (uses the job system's country, the location, then the description)
 us_only = true
 # skip jobs whose lowest experience requirement is above this ("Bachelor's + 5 or Master's + 3" counts as 3)
-max_years_experience = 4
+max_years_experience = 2
 
 # Typed into the search box on Workday sites (most big pharma), one search per term.
 # Workday search is fuzzy, so keep these broad; the include/exclude lists above do the real filtering.
@@ -81,6 +81,15 @@ location_exclude = [
 # Workday sites only show whole days, so 72 keeps "Today", "Yesterday" and "2 Days Ago".
 # Sites that show no posting date: a job counts as new when it first appears (checked every 3 hours).
 max_age_hours = 72
+
+# Third source: JSearch = Google Jobs data (LinkedIn, Indeed, Glassdoor, ZipRecruiter, company sites).
+# Free plan: 200 searches a month. 3 searches x 2 time slots a day x 30 days = 180.
+# Needs the RAPIDAPI_KEY secret. jsearch_any_company = true keeps pharma/biotech postings from ANY employer.
+jsearch_queries = ["QA specialist pharmaceutical", "regulatory affairs associate", "validation specialist GMP"]
+jsearch_calls_per_slot = 3
+jsearch_hours = [8, 15]          # Eastern time: the first run at or after each hour does the searches
+jsearch_date_posted = "today"
+jsearch_any_company = true
 
 # Second source: Adzuna job search (free API key; add ADZUNA_APP_ID and ADZUNA_APP_KEY secrets).
 # Each run searches these titles across the US for postings from the last day. The free plan allows

@@ -1166,8 +1166,10 @@ NUMBER_WORDS = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
                 "eight": 8, "nine": 9, "ten": 10, "twelve": 12, "fifteen": 15}
 _NUM = r"(\d{1,2}|" + "|".join(NUMBER_WORDS) + r")"
 YEARS_RE = re.compile(  # inside a lookahead, so "5 years or Master's + 3 years of experience" yields both 5 and 3
-    rf"(?=\b{_NUM}\s*(?:\+|plus|or\s+more)?\s*(?:(?:-|–|—|to)\s*{_NUM}\s*)?\+?\s*(?:years?|yrs?)\b"
+    rf"(?=\b{_NUM}\s*(?:\(\d{{1,2}}\+?\))?\s*(?:\+|plus|or\s+more)?\s*(?:(?:-|–|—|to)\s*{_NUM}\s*)?\+?\s*(?:years?|yrs?)\b"
     r"(?:\s*\([^)]*\))?[^.;]{0,60}?\b(?:experience|work|working|industry|environment|role|setting))", re.I)
+YEARS_AFTER_RE = re.compile(  # "Experience: 5+ years", "experience of at least 3 years"
+    rf"(?=\bexperience\b[^.;]{{0,40}}?\b{_NUM}\s*(?:\(\d{{1,2}}\+?\))?\s*\+?\s*(?:years?|yrs?)\b)", re.I)
 NO_SPONSOR_RE = [
     re.compile(r"\b(?:no|not|unable|cannot|can't|won't|will\s+not|does\s+not|doesn't|do\s+not|don't|is\s+not|are\s+not)"
                r"\b[^.;]{0,60}\bsponsor", re.I),
@@ -1230,12 +1232,12 @@ def read_description(job: Job):
         if m:
             job.sponsor, job.sponsor_note = "yes", sentence_around(text, m.start(), m.end())
     lows = []
-    for m in YEARS_RE.finditer(text):
+    for m in list(YEARS_RE.finditer(text)) + list(YEARS_AFTER_RE.finditer(text)):
         word = m.group(1).lower()
         low = int(word) if word.isdigit() else NUMBER_WORDS.get(word)
         if low is not None and low <= 20:
             lows.append(low)
-    if lows:
+    if lows and not job.years:
         job.years = f"{min(lows)}+ yrs"  # lowest asked, e.g. "Bachelor's + 5 yrs or Master's + 3 yrs" -> 3+
 
 
@@ -1398,6 +1400,60 @@ def fetch_adzuna(cfg: dict, companies: list[dict]) -> list[tuple[str, Job]]:
     print(f"Adzuna: {calls} search(es), {len(found)} posting(s) from " +
           ("any employer" if any_company else "companies on your list") +
           (f"; problems: {problems[0]}" if problems else ""))
+    return list(found.values())
+
+
+# --------------------------------------------------------------------------- JSearch (third source)
+
+PHARMA_CONTEXT = re.compile(r"\b(?:c?GMPs?|GxP|FDA|pharma\w*|biotech\w*|biolog\w*|biopharm\w*|drug|clinical|"
+                            r"CDMO|life sciences?|vaccine|cell therapy|gene therapy|regulatory submissions?)\b", re.I)
+
+
+def fetch_jsearch(cfg: dict, companies: list[dict], state: dict) -> list[tuple[str, Job]]:
+    """Google Jobs data via JSearch: postings from LinkedIn, Indeed, Glassdoor, ZipRecruiter and company sites.
+    The free plan has 200 searches a month, so it runs in a few time slots a day (jsearch_hours)."""
+    key = os.environ.get("RAPIDAPI_KEY", "").strip()
+    if not key:
+        return []
+    local = NOW.astimezone(LOCAL_TZ)
+    slots = sorted(int(h) for h in cfg.get("jsearch_hours", [8, 15]))
+    slot = max((h for h in slots if h <= local.hour), default=None)
+    slot_id = f"{local.date().isoformat()}-{slot}"
+    if slot is None or state.get("jsearch_done") == slot_id:
+        return []
+    index = adzuna_company_index(companies)
+    any_company = bool(cfg.get("jsearch_any_company", True))
+    found: dict[str, tuple[str, Job]] = {}
+    calls, problems = 0, []
+    for q in list(cfg.get("jsearch_queries") or [])[: int(cfg.get("jsearch_calls_per_slot", 3))]:
+        try:
+            data = http("GET", "https://jsearch.p.rapidapi.com/search", tries=2,
+                        headers={"x-rapidapi-key": key, "x-rapidapi-host": "jsearch.p.rapidapi.com"},
+                        params={"query": f"{q} in USA", "page": 1, "num_pages": 1, "country": "us",
+                                "date_posted": cfg.get("jsearch_date_posted", "today")}).json()
+            calls += 1
+        except Exception as e:
+            problems.append(str(e)[:120])
+            continue
+        for r in data.get("data") or []:
+            employer = clean(r.get("employer_name", ""))
+            description = r.get("job_description") or ""
+            name = match_company(employer, index)
+            if not name:
+                if not (any_company and employer and PHARMA_CONTEXT.search(description)):
+                    continue  # not on your list, and not a pharma/biotech posting
+                name = employer
+            place = ", ".join(x for x in (r.get("job_city"), r.get("job_state")) if x)
+            job = Job(f"jsearch:{r.get('job_id')}", r.get("job_title", ""), r.get("job_apply_link", ""), place,
+                      posted_at=parse_time(r.get("job_posted_at_datetime_utc")), description=description)
+            if (r.get("job_country") or "").upper() in ("US", "USA"):
+                job.country = "United States"
+            months = (r.get("job_required_experience") or {}).get("required_experience_in_months")
+            if isinstance(months, (int, float)) and months > 0:
+                job.years = f"{int(months // 12)}+ yrs"
+            found[job.id] = (name, job)
+    state["jsearch_done"] = slot_id
+    print(f"JSearch: {calls} search(es), {len(found)} posting(s)" + (f"; problems: {problems[0]}" if problems else ""))
     return list(found.values())
 
 
@@ -2044,7 +2100,7 @@ def run(args) -> int:
                 to_fix.append(f"{name}: read {source} but couldn't find a job list there")
 
     if not args.company:  # second source: Adzuna, by job title across the US (skipped when testing one company)
-        for name, j in fetch_adzuna(cfg, all_companies):
+        for name, j in fetch_adzuna(cfg, all_companies) + fetch_jsearch(cfg, all_companies, state):
             if not matches(j, filters):
                 continue
             seen = seen_all.setdefault(name, {})
