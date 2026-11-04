@@ -612,7 +612,7 @@ def render_pages(url: str) -> list[tuple[str, str]]:
             browser.close()
 
 
-BROWSER_LOCK = threading.Semaphore(4)  # up to 4 browser pages at once
+BROWSER_LOCK = threading.Semaphore(6)  # up to 6 browser pages at once (public repositories get bigger runners)
 BROWSER_TERMS = ["quality", "regulatory", "validation"]  # searches run inside the browser
 
 
@@ -2026,13 +2026,22 @@ def run(args) -> int:
     order = {"high": 0, "medium": 1, "normal": 2}
     all_companies = companies
 
+    unreadable = state.get("manual", {})  # sites that failed last time: retried once a day, last in line
+    retry_hours = float(cfg.get("check_by_hand_retry_hours", 24))
+
     def due(c):
-        if args.check or args.company or c["priority"] == "high" or not last_checked.get(c["name"]):
+        if args.check or args.company or not last_checked.get(c["name"]):
             return True
-        hours = intervals[c["priority"]]
-        return (NOW - datetime.fromisoformat(last_checked[c["name"]])).total_seconds() >= (hours - 0.5) * 3600
+        since = (NOW - datetime.fromisoformat(last_checked[c["name"]])).total_seconds()
+        interval = 0.0 if c["priority"] == "high" else intervals[c["priority"]]
+        if c["name"] in unreadable:  # wait for whichever is longer: its batch interval or the daily retry
+            interval = max(interval, retry_hours)
+        return interval <= 0 or since >= (interval - 0.5) * 3600
     companies = sorted((c for c in all_companies if due(c)),
-                       key=lambda c: (order[c["priority"]], last_checked.get(c["name"], "")))
+                       key=lambda c: (c["name"] in unreadable, order[c["priority"]], last_checked.get(c["name"], "")))
+    skipped_unreadable = sum(1 for c in all_companies if c["name"] in unreadable and not due(c))
+    if skipped_unreadable:
+        print(f"{skipped_unreadable} site(s) on the check-by-hand list wait for their daily retry.")
     deadline = None if args.check else started + float(cfg.get("max_run_minutes", 20)) * 60
     global DEADLINE
     DEADLINE = deadline

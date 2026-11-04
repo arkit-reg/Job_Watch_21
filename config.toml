@@ -106,6 +106,10 @@ adzuna_any_company = false
 quiet_logs = true
 log_sponsorship = false
 
+# Sites on the check-by-hand list are retried only this often (hours), last in line, so they
+# don't use up the time readable sites need. A site that starts working again is checked normally.
+check_by_hand_retry_hours = 24
+
 # Never repeat: a job counts as already sent if its link was sent before (under any company name),
 # or this company already sent the same job title at any location.
 never_repeat_title = true
@@ -135,7 +139,7 @@ normal_interval_hours = 3
 # Stop starting new companies after this many minutes and finish them next run.
 # Public repository: GitHub minutes are unlimited, so runs can take longer (the workflow stops a run at 40).
 # For a private repository use 5 (2,000 free minutes a month).
-max_run_minutes = 25
+max_run_minutes = 32
 
 # How many sites to check at the same time
-workers = 24
+workers = 32
