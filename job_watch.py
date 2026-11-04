@@ -1679,7 +1679,7 @@ def job_card(name: str, j: Job) -> str:
 
 
 def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
-                recruiters=frozenset(), per_recruiter=3) -> str:
+                recruiters=frozenset(), per_recruiter=3, starred=frozenset(), manual_link="") -> str:
     """The email version: a header, then one card per job, grouped by role type.
     Jobs from recruiters and consulting firms come last, a few per firm."""
     esc = html.escape
@@ -1721,14 +1721,18 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
                     f'Nothing new matching your roles was posted in the last {max_age:g} hours.</div>')
     if manual and full_manual_list:
         rows = "".join(f'<tr><td style="padding:6px 0;border-top:1px solid #eaecf0;font-family:{FONT};font-size:13px">'
+                       f'{"&#9733; " if name in starred else ""}'
                        f'<a href="{esc(link)}" style="color:#1d4ed8;font-weight:600;text-decoration:none">{esc(name)}</a>'
                        f'<span style="color:#667085"> · {esc(reason)}</span></td></tr>' for name, link, reason in manual)
+        sheet = (f' <a href="{esc(manual_link)}" style="color:#1d4ed8">Open the full list as a spreadsheet</a>.'
+                 if manual_link else "")
+        legend = " &#9733; = your original list (check these first)." if starred & {n for n, _, _ in manual} else ""
         body.append(f"""
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
        style="background:#ffffff;border:1px solid #e4e7ec;border-radius:12px;margin:22px 0 12px">
   <tr><td style="padding:16px 18px">
     <div style="font-family:{FONT};font-size:15px;font-weight:700;color:#101828">Check these by hand ({len(manual)})</div>
-    <div style="margin:2px 0 8px;font-family:{FONT};font-size:13px;color:#667085">The watcher can't read their job lists.</div>
+    <div style="margin:2px 0 8px;font-family:{FONT};font-size:13px;color:#667085">The watcher can't read their job lists, so check these yourself.{legend}{sheet}</div>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">{rows}</table>
   </td></tr>
 </table>""")
@@ -1759,7 +1763,7 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
 
 
 def build_message(new, manual, full_manual_list, companies, max_age, checked, ok, when,
-                  recruiters=frozenset(), per_recruiter=3):
+                  recruiters=frozenset(), per_recruiter=3, starred=frozenset(), manual_link=""):
     """The message sent after every run: new jobs (or "no new jobs"), then the check-by-hand list.
     Direct employers first; recruiters and consulting firms last, a few jobs each."""
     order = {c["name"]: i + (100000 if c["name"] in recruiters else 0) for i, c in enumerate(companies)}
@@ -1802,8 +1806,10 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
             text.append(f"\nCHECK THESE BY HAND ({len(manual)}) - the watcher can't read their job lists")
             rich.append(f"<h3>Check these by hand ({len(manual)})</h3><p style='color:#666'>"
                         "The watcher can't read their job lists, so look at these yourself.</p><ul>")
+            if manual_link:
+                text.append(f"  Full list as a spreadsheet: {manual_link}")
             for name, link, reason in manual:
-                text.append(f"  - {name}: {link}")
+                text.append(f"  - {'* ' if name in starred else ''}{name}: {link}")
                 rich.append(f'<li><a href="{esc(link)}">{esc(name)}</a> <span style="color:#666">- {esc(reason)}</span></li>')
             rich.append("</ul>")
         else:
@@ -1825,7 +1831,8 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
     else:
         subject = f"No new jobs ({when} check)"
     click = new[0][1].url if len(new) == 1 else None
-    rich = build_email(new, manual, full_manual_list, checked, ok, when, max_age, recruiters, per_recruiter)
+    rich = build_email(new, manual, full_manual_list, checked, ok, when, max_age, recruiters, per_recruiter,
+                       starred, manual_link)
     return subject, "\n".join(text).strip(), rich, click
 
 
@@ -2176,8 +2183,15 @@ def run(args) -> int:
         since.setdefault(n, today)
     for n in [k for k in since if k not in names]:
         del since[n]
-    full_list = bool(manual) and (names != state.get("manual_last_list")
+    full_list = bool(manual) and (bool(cfg.get("manual_list_in_every_email", True))
+                                  or names != state.get("manual_last_list")
                                   or (local.hour >= 8 and state.get("manual_last_date") != today))
+    rank = {c["name"]: order[c["priority"]] for c in all_companies}
+    manual.sort(key=lambda m: (rank.get(m[0], 9), m[0].lower()))  # your original (high-priority) list first
+    starred = {c["name"] for c in all_companies if c["priority"] == "high"}
+    repo = os.environ.get("GITHUB_REPOSITORY", "")
+    manual_link = (f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{repo}/blob/main/manual_check.csv"
+                   if repo else "")
 
     recruiters = {c["name"] for c in all_companies
                   if re.search(r"recruit|staffing|consult", c.get("group", ""), re.I)}
@@ -2186,7 +2200,8 @@ def run(args) -> int:
         new = [(n, j) for n, j in new if n not in recruiters]
     subject, text, rich, click = build_message(new, manual, full_list, all_companies, max_age,
                                                len(attempted), ok, when, recruiters,
-                                               int(cfg.get("max_jobs_per_recruiter", 3)))
+                                               int(cfg.get("max_jobs_per_recruiter", 3)),
+                                               starred, manual_link)
     if cfg.get("browser_fallback", True):
         b = BROWSER_STATS
         if not browser_available():

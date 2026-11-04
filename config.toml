@@ -106,6 +106,10 @@ adzuna_any_company = false
 quiet_logs = true
 log_sponsorship = false
 
+# List every check-by-hand company (with links) in every email; false = only when the list changes
+# and in the first email after 8 AM.
+manual_list_in_every_email = true
+
 # Sites on the check-by-hand list are retried only this often (hours), last in line, so they
 # don't use up the time readable sites need. A site that starts working again is checked normally.
 check_by_hand_retry_hours = 24
