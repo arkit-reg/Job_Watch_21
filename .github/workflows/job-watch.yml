@@ -2,7 +2,7 @@ name: Job watch
 
 on:
   schedule:
-    - cron: "17 */3 * * *"   # backup timer; cron-job.org is the main one
+    - cron: "17 * * * *"   # every hour; the watcher only does the full check every 3 hours
   workflow_dispatch:
 
 permissions:
