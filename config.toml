@@ -24,6 +24,36 @@ include = [
 
   # --- Validation / CSV ---
   "validation", "CSV", "computer software assurance", "qualification", "commissioning", "C&Q", "CQV",
+  "calibration", "metrology",
+
+  # --- Investigations and quality events (CAPA, deviation and complaint titles already match above) ---
+  "investigation", "quality investigator", "CAPA investigator", "deviation investigator", "quality event",
+  "nonconformance", "non-conformance", "root cause",
+
+  # --- Floor QA, inspection and release ---
+  "IPQA", "in-process QA", "in-process quality", "QA inspector", "quality inspector", "inspection associate", "inspection technician", "visual inspection",
+  "product release", "release specialist", "material release", "incoming inspection",
+  "vendor qualification", "supplier qualification",
+
+  # --- GMP manufacturing and operations ---
+  "manufacturing associate", "manufacturing technician", "manufacturing specialist", "manufacturing operator",
+  "production associate", "production technician", "production operator", "process technician",
+  "bioprocess associate", "bioprocess technician", "biomanufacturing", "cell therapy manufacturing",
+  "upstream manufacturing", "downstream manufacturing", "aseptic", "fill finish", "packaging associate",
+  "packaging technician", "packaging operator", "GMP technician", "cleanroom", "MSAT associate",
+
+  # --- Technical writing, records and GMP training ---
+  "technical writer", "GMP writer", "SOP writer", "document specialist", "document coordinator",
+  "records specialist", "records coordinator", "records management", "training coordinator",
+  "training specialist", "learning management",
+
+  # --- Clinical documents and drug safety ---
+  "TMF", "eTMF", "trial master file", "clinical document", "clinical documentation",
+  "clinical trial assistant", "clinical trial associate", "pharmacovigilance", "drug safety",
+  "PV associate", "PV specialist", "case processing",
+
+  # --- More regulatory titles ---
+  "CMC", "product registration", "registration specialist", "registration associate", "dossier",
 ]
 
 # ...and none of these. Tuned for entry level; delete any you'd still want to hear about.
@@ -41,6 +71,8 @@ exclude = [
   "counsel", "attorney", "paralegal", "regulatory reporting", "commercial compliance", "healthcare compliance",
   "trade compliance", "export compliance", "privacy", "SOX", "tax", "financial", "finance", "ethics",
   "environmental", "EHS", "HSE",
+  # roles that share words with the newer role groups
+  "sales", "marketing", "forklift", "warehouse", "driver", "physician", "nurse",
 ]
 
 # After reading each new job's full description:
@@ -48,6 +80,9 @@ exclude = [
 us_only = true
 # skip jobs whose lowest experience requirement is above this ("Bachelor's + 5 or Master's + 3" counts as 3)
 max_years_experience = 2
+# Experience limit for companies marked important in companies.csv (raise to 3 or 4 if a referral
+# could get you considered for slightly more senior roles there)
+important_max_years_experience = 2
 
 # Typed into the search box on Workday sites (most big pharma), one search per term.
 # Workday search is fuzzy, so keep these broad; the include/exclude lists above do the real filtering.

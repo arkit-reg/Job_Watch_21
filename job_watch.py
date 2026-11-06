@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import html
 import json
 import os
@@ -999,7 +1000,7 @@ def job_links(page_html: str, base: str, limit: int = 2) -> list[str]:
         href = urljoin(base, a["href"].strip()).split("#")[0]
         if not href.startswith("http"):
             continue
-        if JOB_LINK_RE.search(urlparse(href).path) or re.search(r"[?&](?:jobId|job_id|reqId|requisitionId|jid)=", href, re.I):
+        if JOB_LINK_RE.search(urlparse(href).path) or re.search(r"[?&](?:(?:jobId|job_id|reqId|requisitionId|jid)=|p=\d+(?:&|$))", href, re.I):
             if href not in out:
                 out.append(href)
         if len(out) >= limit:
@@ -1293,7 +1294,7 @@ def us_status(job: Job, f: dict) -> str:
     return "unknown"
 
 
-def skip_reason(job: Job, f: dict, cfg: dict) -> str:
+def skip_reason(job: Job, f: dict, cfg: dict, important: bool = False) -> str:
     """Why a new job shouldn't be sent after reading its description ('' = send it)."""
     if cfg.get("us_only", True):
         status = us_status(job, f)
@@ -1301,7 +1302,8 @@ def skip_reason(job: Job, f: dict, cfg: dict) -> str:
             return "outside the US"
         if status == "unknown" and job.text:  # read the description, and nothing in it says US
             return "location not confirmed as US"
-    max_years = cfg.get("max_years_experience")
+    max_years = cfg.get("important_max_years_experience" if important else "max_years_experience",
+                        cfg.get("max_years_experience"))
     if max_years is not None and job.years and int(job.years.split("+")[0]) > int(max_years):
         return f"asks {job.years}"
     if re.search(r"\bQA\b|quality assurance|quality engineer|validation", job.title, re.I) and job.text:
@@ -1547,9 +1549,11 @@ def load_companies(only: str | None = None) -> list[dict]:
             continue
         names.add(name.lower())
         priority = row.get("priority", "").lower()
-        companies.append({"name": name, "url": url, "group": row.get("group", ""),
+        important = row.get("important", "").strip().lower() in ("yes", "y", "true", "1", "important", "★")
+        companies.append({"name": name, "url": url, "group": row.get("group", ""), "important": important,
                           "render": row.get("render", "").lower() in ("yes", "y", "true", "1"),
-                          "priority": ("medium" if priority in ("medium", "mid", "2")
+                          "priority": "high" if important else
+                                      ("medium" if priority in ("medium", "mid", "2")
                                        else "normal" if priority in ("normal", "low", "3", "twice a day", "2x")
                                        else "high")})
     if only:
@@ -1618,7 +1622,7 @@ def looks_like_job_list(jobs: list[Job]) -> bool:
         if j.id.startswith("data:") or j.posted_at:
             return True
         if (JOB_LINK_RE.search(urlparse(j.url).path) or detect_ats(j.url)
-                or re.search(r"[?&](?:jobId|job_id|reqId|requisitionId|jid)=", j.url, re.I)):
+                or re.search(r"[?&](?:(?:jobId|job_id|reqId|requisitionId|jid)=|p=\d+(?:&|$))", j.url, re.I)):
             return True
     return False
 
@@ -1627,15 +1631,27 @@ FAMILIES = {  # tag text, text color, background
     "QA": ("Quality Assurance", "#1d4ed8", "#e0eaff"),
     "RA": ("Regulatory Affairs", "#7e22ce", "#f1e6ff"),
     "Validation": ("Validation / CSV", "#0f766e", "#d6f5ee"),
+    "Manufacturing": ("Manufacturing / Operations", "#b45309", "#fef3c7"),
+    "Clinical": ("Clinical documents & safety", "#be185d", "#fce7f3"),
 }
 FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif"
 
 
 def role_family(title: str) -> str:
-    if re.search(r"regulatory|submission|\beCTD\b|labell?ing|\bRA\b", title, re.I):
+    if re.search(r"regulatory|submission|\beCTD\b|labell?ing|\bRA\b|\bCMC\b|registration|dossier", title, re.I):
         return "RA"
-    if re.search(r"validation|\bCSV\b|qualification|commissioning|C&Q|\bCQV\b|software assurance", title, re.I):
+    if re.search(r"(?<!vendor )(?<!supplier )validation|\bCSV\b|(?<!vendor )(?<!supplier )qualification|commissioning"
+                 r"|C&Q|\bCQV\b|software assurance|calibration|metrology", title, re.I):
         return "Validation"
+    if re.search(r"\be?TMF\b|trial master|clinical (?:document|trial)|pharmacovigilance|drug safety|\bPV\b"
+                 r"|case processing", title, re.I):
+        return "Clinical"
+    if re.search(r"quality|\b(?:IP)?QA\b|CAPA|deviation|investigat|complaint|inspect|release|document|records?\b"
+                 r"|technical writer|SOP|training|compliance|GxP|GMP (?:compliance|auditor)", title, re.I):
+        return "QA"
+    if re.search(r"manufactur|production|process technician|bioprocess|aseptic|fill.?finish|packaging|cleanroom"
+                 r"|MSAT|\bGMP technician", title, re.I):
+        return "Manufacturing"
     return "QA"
 
 
@@ -1678,25 +1694,69 @@ def job_card(name: str, j: Job) -> str:
 </table>"""
 
 
+def careers_text_fingerprint(page_html: str) -> str:
+    """The careers page's own words (not menus, links or scripts), so a change means the content changed."""
+    soup = BeautifulSoup(page_html or "", "html.parser")
+    for tag in soup(["script", "style", "noscript", "nav", "header", "footer", "a", "form", "svg"]):
+        tag.decompose()
+    words = " ".join(soup.get_text(" ").split()).lower()
+    words = re.sub(r"\b(19|20)\d\d\b", "", words)  # ignore copyright years
+    return hashlib.sha256(words.encode("utf-8")).hexdigest()[:16]
+
+
+def page_change_jobs(companies: list[dict], results: dict, state: dict, stamp: str) -> list[tuple[str, Job]]:
+    """For important companies whose careers page has no readable job list, alert when the page changes."""
+    hashes = state.setdefault("page_hashes", {})
+    alerts = []
+    for c in companies:
+        if not c.get("important") or c["name"] not in results:
+            continue
+        jobs, source, error, _ = results[c["name"]]
+        if error or source == POSTPONED or looks_like_job_list(jobs):
+            continue
+        try:
+            fingerprint = careers_text_fingerprint(http("GET", c["url"], tries=1, timeout=15).text)
+        except Exception:
+            continue
+        before = hashes.get(c["name"])
+        hashes[c["name"]] = fingerprint
+        if before and before != fingerprint:
+            alerts.append((c["name"], Job(f"pagechange:{c['name']}:{fingerprint}",
+                                          "Careers page updated: check for new openings", c["url"],
+                                          posted="Changed since the last check")))
+    return alerts
+
+
 def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
-                recruiters=frozenset(), per_recruiter=3, starred=frozenset(), manual_link="") -> str:
+                recruiters=frozenset(), per_recruiter=3, starred=frozenset(), manual_link="",
+                important=frozenset()) -> str:
     """The email version: a header, then one card per job, grouped by role type.
     Jobs from recruiters and consulting firms come last, a few per firm."""
     esc = html.escape
-    agency = [(n, j) for n, j in new if n in recruiters]
-    new = [(n, j) for n, j in new if n not in recruiters]
+    agency = [(n, j) for n, j in new if n in recruiters and n not in important]
+    top = [(n, j) for n, j in new if n in important]
+    new = [(n, j) for n, j in new if n not in recruiters and n not in important]
     counts = {}
+    for _, j in top:
+        counts[role_family(j.title)] = counts.get(role_family(j.title), 0) + 1
     for _, j in new:
         counts[role_family(j.title)] = counts.get(role_family(j.title), 0) + 1
-    if new or agency:
-        headline = f"{len(new)} new job{'s' if len(new) != 1 else ''} for you"
+    if new or agency or top:
+        headline = f"{len(new) + len(top)} new job{'s' if len(new) + len(top) != 1 else ''} for you"
         summary = "".join(badge(f"{n} {FAMILIES[f][0]}", FAMILIES[f][1], FAMILIES[f][2])
                           for f, n in counts.items())
         if agency:
             summary += badge(f"{len(agency)} from recruiters & consultancies", "#475467", "#eaecf0")
+        if top:
+            summary = badge(f"★ {len(top)} at important companies", "#101828", "#fef0c7") + summary
     else:
         headline, summary = "No new jobs this check", ""
     body = []
+    if top:
+        body.append(f'<div style="margin:22px 0 10px;font-family:{FONT};font-size:13px;font-weight:700;'
+                    f'letter-spacing:.05em;text-transform:uppercase;color:#101828">'
+                    f'★ Important companies ({len(top)})</div>')
+        body.extend(job_card(n, j) for n, j in top)
     for family, (label, color, _) in FAMILIES.items():
         jobs = [(n, j) for n, j in new if role_family(j.title) == family]
         if not jobs:
@@ -1716,7 +1776,7 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
             if len(jobs) > per_recruiter:
                 body.append(f'<div style="margin:-4px 0 12px;font-family:{FONT};font-size:13px;color:#667085">'
                             f'+{len(jobs) - per_recruiter} more matching jobs at {esc(n)} (all in jobs_log.csv)</div>')
-    if not new and not agency:
+    if not new and not agency and not top:
         body.append(f'<div style="margin:16px 0;font-family:{FONT};font-size:15px;color:#344054">'
                     f'Nothing new matching your roles was posted in the last {max_age:g} hours.</div>')
     if manual and full_manual_list:
@@ -1763,10 +1823,12 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
 
 
 def build_message(new, manual, full_manual_list, companies, max_age, checked, ok, when,
-                  recruiters=frozenset(), per_recruiter=3, starred=frozenset(), manual_link=""):
+                  recruiters=frozenset(), per_recruiter=3, starred=frozenset(), manual_link="",
+                  important=frozenset()):
     """The message sent after every run: new jobs (or "no new jobs"), then the check-by-hand list.
     Direct employers first; recruiters and consulting firms last, a few jobs each."""
-    order = {c["name"]: i + (100000 if c["name"] in recruiters else 0) for i, c in enumerate(companies)}
+    order = {c["name"]: i + (100000 if c["name"] in recruiters and c["name"] not in important else 0)
+                 - (200000 if c["name"] in important else 0) for i, c in enumerate(companies)}
     text, rich = [], ['<div style="font-family:Calibri,Arial,sans-serif;font-size:15px">']
     esc = html.escape
 
@@ -1781,7 +1843,9 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
             hidden = 0
             if name in recruiters and len(jobs) > per_recruiter:
                 jobs, hidden = jobs[:per_recruiter], len(jobs) - per_recruiter
-            text.append(f"\n{name}" + (" (recruiter / consultancy)" if name in recruiters else ""))
+            text.append(f"\n{'* ' if name in important else ''}{name}"
+                        + (" (important company)" if name in important
+                           else " (recruiter / consultancy)" if name in recruiters else ""))
             rich.append(f"<p style='margin:12px 0 4px'><b>{esc(name)}</b></p><ul style='margin-top:0'>")
             for j in jobs:
                 extra = " - ".join(x for x in (j.location, age_text(j)) if x)
@@ -1828,11 +1892,18 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
                    else f"{agency_count} new recruiter job{'s' if agency_count != 1 else ''}: {who}")
         if direct and agency_count:
             subject += f" (+{agency_count} from recruiters)"
+        top_names = list(dict.fromkeys(n for n, _ in new if n in important))
+        if top_names:
+            top_count = sum(1 for n, _ in new if n in important)
+            others = len(new) - top_count
+            subject = (f"★ {top_count} job{'s' if top_count != 1 else ''} at important companies: "
+                       + ", ".join(top_names[:3]) + (f" +{len(top_names) - 3} more" if len(top_names) > 3 else "")
+                       + (f" (+{others} more jobs)" if others else ""))
     else:
         subject = f"No new jobs ({when} check)"
     click = new[0][1].url if len(new) == 1 else None
     rich = build_email(new, manual, full_manual_list, checked, ok, when, max_age, recruiters, per_recruiter,
-                       starred, manual_link)
+                       starred, manual_link, important)
     return subject, "\n".join(text).strip(), rich, click
 
 
@@ -2039,13 +2110,16 @@ def run(args) -> int:
     def due(c):
         if args.check or args.company or not last_checked.get(c["name"]):
             return True
+        if c.get("important"):  # important companies: every run, even when their site can't be read
+            return True
         since = (NOW - datetime.fromisoformat(last_checked[c["name"]])).total_seconds()
         interval = 0.0 if c["priority"] == "high" else intervals[c["priority"]]
         if c["name"] in unreadable:  # wait for whichever is longer: its batch interval or the daily retry
             interval = max(interval, retry_hours)
         return interval <= 0 or since >= (interval - 0.5) * 3600
     companies = sorted((c for c in all_companies if due(c)),
-                       key=lambda c: (c["name"] in unreadable, order[c["priority"]], last_checked.get(c["name"], "")))
+                       key=lambda c: (not c.get("important"), c["name"] in unreadable, order[c["priority"]],
+                                      last_checked.get(c["name"], "")))
     skipped_unreadable = sum(1 for c in all_companies if c["name"] in unreadable and not due(c))
     if skipped_unreadable:
         print(f"{skipped_unreadable} site(s) on the check-by-hand list wait for their daily retry.")
@@ -2136,10 +2210,11 @@ def run(args) -> int:
             sent[key] = sent[tkey] = sent_urls[ukey] = stamp
             if args.check:
                 print(f"   + [Adzuna] {name}: {j.title} ({j.location})\n       {j.url}")
+    important_names = {c["name"] for c in all_companies if c.get("important")}
     read_descriptions([j for _, j in new])
     skipped = {}
     for name, j in new:
-        reason = skip_reason(j, filters, cfg)
+        reason = skip_reason(j, filters, cfg, important=name in important_names)
         if reason:
             skipped[j.id] = reason
             for k in (title_key(j), "t:" + plain_title(j)):  # never sent, so don't block a later re-post
@@ -2198,10 +2273,13 @@ def run(args) -> int:
     recruiters |= set(cfg.get("recruiter_companies", []))
     if not cfg.get("include_recruiters", True):
         new = [(n, j) for n, j in new if n not in recruiters]
+    if not args.check:
+        new += page_change_jobs(companies, results, state, stamp)
     subject, text, rich, click = build_message(new, manual, full_list, all_companies, max_age,
                                                len(attempted), ok, when, recruiters,
                                                int(cfg.get("max_jobs_per_recruiter", 3)),
-                                               starred, manual_link)
+                                               starred, manual_link,
+                                               {c["name"] for c in all_companies if c.get("important")})
     if cfg.get("browser_fallback", True):
         b = BROWSER_STATS
         if not browser_available():
