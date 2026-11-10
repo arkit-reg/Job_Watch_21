@@ -1,0 +1,79 @@
+name: Job watch
+
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"   # wake every 15 min; gate.py runs the full check once per 3-hour slot
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: job-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Is this time slot already checked?
+        id: gate
+        run: python3 gate.py
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.run == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - if: steps.gate.outputs.run == 'true'
+        run: pip install -r requirements.txt
+      - name: Install the headless browser
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Check career sites
+        if: steps.gate.outputs.run == 'true'
+        run: python job_watch.py
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO_2: ${{ secrets.EMAIL_TO_2 }}
+          RESEND_API_KEY_2: ${{ secrets.RESEND_API_KEY_2 }}
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+      - name: Save seen jobs and the job log
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          git config user.name "job-watch-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Update seen jobs"
+          git pull --rebase
+          git push
+      - name: Email me if this run did not finish
+        if: (failure() || cancelled()) && steps.gate.outputs.run == 'true'
+        env:
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          to, key = os.environ.get("EMAIL_TO", ""), os.environ.get("RESEND_API_KEY", "")
+          if to and key:
+              body = {"from": "Job Watch <onboarding@resend.dev>", "to": [to],
+                      "subject": "Job watch: this 3-hour check did not finish",
+                      "text": "This run stopped before sending your job list. Nothing is lost: "
+                              "the next run picks up any new jobs. Details: " + os.environ["RUN_URL"]}
+              req = urllib.request.Request("https://api.resend.com/emails", data=json.dumps(body).encode(),
+                                           headers={"Authorization": "Bearer " + key,
+                                                    "Content-Type": "application/json",
+                                                    "User-Agent": "job-watch"})
+              urllib.request.urlopen(req, timeout=30)
+              print("Failure notice emailed.")
+          PY

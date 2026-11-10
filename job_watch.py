@@ -2089,10 +2089,12 @@ def run(args) -> int:
     global NOW
     NOW = datetime.now(timezone.utc)
     stamp = NOW.isoformat(timespec="seconds")
-    gap = float(cfg.get("min_hours_between_scheduled_runs", 2.5))
-    if (not args.check and os.environ.get("GITHUB_EVENT_NAME") == "schedule" and state.get("last_run")
-            and (NOW - datetime.fromisoformat(state["last_run"])).total_seconds() < gap * 3600):
-        print(f"Backup timer: a run already happened at {state['last_run']}, so this one stands down.")
+    every = max(1, int(cfg.get("run_every_hours", 3)))
+    local_now = NOW.astimezone(LOCAL_TZ)
+    slot = local_now.replace(hour=local_now.hour - local_now.hour % every, minute=0, second=0,
+                             microsecond=0).strftime("%Y-%m-%d %H:00")
+    if not args.check and os.environ.get("GITHUB_EVENT_NAME") == "schedule" and state.get("last_slot") == slot:
+        print(f"Time slot {slot} (Eastern) was already checked, so this wake-up stops here.")
         return 0
     max_age = float(cfg.get("max_age_hours") or 0)
     started = time.time()
@@ -2308,6 +2310,8 @@ def run(args) -> int:
     write_manual_file(manual, since)
     append_log(new, stamp, with_sponsorship=bool(cfg.get("log_sponsorship", False)))  # creates it on the first run
     state["last_run"] = stamp
+    if not args.check and not args.company:
+        state["last_slot"] = slot  # this time slot is done
     state["version"] = 2
     save_state(state)
     print(summary)

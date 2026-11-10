@@ -158,9 +158,10 @@ never_repeat_title = true
 include_recruiters = true
 max_jobs_per_recruiter = 3
 
-# GitHub's own timer is a backup for the outside timer (cron-job.org): if a run happened within
-# this many hours, a GitHub-timer run stands down, so you never get two emails for one slot.
-min_hours_between_scheduled_runs = 2.5
+# Full checks run once per time slot on the clock (Eastern): with 3 that's 12 AM, 3, 6, 9 AM,
+# 12 PM, 3, 6 and 9 PM. GitHub wakes the workflow every 15 minutes; the first wake-up in each
+# slot runs the check and the rest stop in a few seconds.
+run_every_hours = 3
 
 # Email (if set up) only arrives when there are new jobs. Set to true to also get "no new jobs" emails.
 email_every_run = true
@@ -178,7 +179,7 @@ normal_interval_hours = 3
 # Stop starting new companies after this many minutes and finish them next run.
 # Public repository: GitHub minutes are unlimited, so runs can take longer (the workflow stops a run at 40).
 # For a private repository use 5 (2,000 free minutes a month).
-max_run_minutes = 32
+max_run_minutes = 40
 
 # How many sites to check at the same time
 workers = 32
