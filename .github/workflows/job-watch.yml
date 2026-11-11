@@ -28,19 +28,14 @@ jobs:
           cache: pip
       - if: steps.gate.outputs.run == 'true'
         run: pip install -r requirements.txt
-      - name: Install the headless browser
+      - name: Set up the headless browser
         if: steps.gate.outputs.run == 'true'
-        continue-on-error: true   # if this fails, the watcher still checks every site it can read without a browser
-        timeout-minutes: 8
+        continue-on-error: true   # the watcher uses the Google Chrome already on GitHub's servers
+        timeout-minutes: 4
         run: |
           pip install playwright
-          for attempt in 1 2 3; do
-            python -m playwright install --with-deps chromium && exit 0
-            echo "Browser install attempt $attempt failed (often a temporary Ubuntu server problem); retrying in 20 seconds"
-            sleep 20
-          done
-          echo "Trying the browser alone, without Ubuntu's system packages"
-          python -m playwright install chromium
+          google-chrome --version || echo "Google Chrome not found; downloading Playwright's browser instead"
+          google-chrome --version || python -m playwright install chromium
       - name: Check career sites
         if: steps.gate.outputs.run == 'true'
         run: python job_watch.py
