@@ -2,7 +2,7 @@ name: Job watch
 
 on:
   schedule:
-    - cron: "17 * * * *"   # every hour; the watcher only does the full check every 3 hours
+    - cron: "7,22,37,52 * * * *"   # wake every 15 min; gate.py runs the full check once per 3-hour slot
   workflow_dispatch:
 
 permissions:
@@ -15,19 +15,34 @@ concurrency:
 jobs:
   watch:
     runs-on: ubuntu-24.04
-    timeout-minutes: 55
+    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - name: Is this time slot already checked?
+        id: gate
+        run: python3 gate.py
+      - uses: actions/setup-python@v6
+        if: steps.gate.outputs.run == 'true'
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -r requirements.txt
+      - if: steps.gate.outputs.run == 'true'
+        run: pip install -r requirements.txt
       - name: Install the headless browser
+        if: steps.gate.outputs.run == 'true'
+        continue-on-error: true   # if this fails, the watcher still checks every site it can read without a browser
+        timeout-minutes: 8
         run: |
           pip install playwright
-          python -m playwright install --with-deps chromium
+          for attempt in 1 2 3; do
+            python -m playwright install --with-deps chromium && exit 0
+            echo "Browser install attempt $attempt failed (often a temporary Ubuntu server problem); retrying in 20 seconds"
+            sleep 20
+          done
+          echo "Trying the browser alone, without Ubuntu's system packages"
+          python -m playwright install chromium
       - name: Check career sites
+        if: steps.gate.outputs.run == 'true'
         run: python job_watch.py
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
@@ -39,6 +54,7 @@ jobs:
           ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
           RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
       - name: Save seen jobs and the job log
+        if: steps.gate.outputs.run == 'true'
         run: |
           git config user.name "job-watch-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -48,13 +64,13 @@ jobs:
           git pull --rebase
           git push
       - name: Email me if this run did not finish
-        if: failure() || cancelled()
+        if: (failure() || cancelled()) && steps.gate.outputs.run == 'true'
         env:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           import json, os, urllib.request
           to, key = os.environ.get("EMAIL_TO", ""), os.environ.get("RESEND_API_KEY", "")
           if to and key:
