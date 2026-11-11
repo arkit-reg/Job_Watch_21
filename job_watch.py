@@ -588,7 +588,7 @@ def render_pages(url: str) -> list[tuple[str, str]]:
         raise RuntimeError("render=yes needs Playwright: pip install playwright && "
                            "python -m playwright install chromium")
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        browser = launch_browser(p)
         try:
             page = browser.new_page(user_agent=USER_AGENT, ignore_https_errors=True)
             page.goto(prepare_url(url), wait_until="domcontentloaded", timeout=30_000)
@@ -617,6 +617,15 @@ BROWSER_LOCK = threading.Semaphore(6)  # up to 6 browser pages at once (public r
 BROWSER_TERMS = ["quality", "regulatory", "validation"]  # searches run inside the browser
 
 
+def launch_browser(p):
+    """Use the Google Chrome already installed on GitHub's servers (nothing to download, so a broken
+    Ubuntu download server can't stop it); fall back to Playwright's own Chromium if Chrome isn't there."""
+    try:
+        return p.chromium.launch(channel="chrome", headless=True)
+    except Exception:
+        return p.chromium.launch(headless=True)
+
+
 _BROWSER_OK: list[bool] = []
 
 
@@ -626,7 +635,7 @@ def browser_available() -> bool:
         try:
             from playwright.sync_api import sync_playwright
             with sync_playwright() as p:
-                p.chromium.launch(headless=True).close()
+                launch_browser(p).close()
             _BROWSER_OK.append(True)
         except Exception as e:
             print(f"Headless browser unavailable this run ({type(e).__name__}); "
