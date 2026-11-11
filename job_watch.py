@@ -617,12 +617,22 @@ BROWSER_LOCK = threading.Semaphore(6)  # up to 6 browser pages at once (public r
 BROWSER_TERMS = ["quality", "regulatory", "validation"]  # searches run inside the browser
 
 
+_BROWSER_OK: list[bool] = []
+
+
 def browser_available() -> bool:
-    try:
-        import playwright.sync_api  # noqa: F401
-        return True
-    except ImportError:
-        return False
+    """True only if the headless browser actually starts (checked once per run)."""
+    if not _BROWSER_OK:
+        try:
+            from playwright.sync_api import sync_playwright
+            with sync_playwright() as p:
+                p.chromium.launch(headless=True).close()
+            _BROWSER_OK.append(True)
+        except Exception as e:
+            print(f"Headless browser unavailable this run ({type(e).__name__}); "
+                  "JavaScript-only sites wait for the next run.")
+            _BROWSER_OK.append(False)
+    return _BROWSER_OK[0]
 
 
 BROWSER_STATS = {"opened": 0, "failed": 0, "error": ""}
