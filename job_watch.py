@@ -1569,9 +1569,10 @@ def load_companies(only: str | None = None) -> list[dict]:
         names.add(name.lower())
         priority = row.get("priority", "").lower()
         important = row.get("important", "").strip().lower() in ("yes", "y", "true", "1", "important", "★")
-        companies.append({"name": name, "url": url, "group": row.get("group", ""), "important": important,
+        h1b = row.get("h1b", "").strip().lower() in ("yes", "y", "true", "1", "h1b")
+        companies.append({"name": name, "url": url, "group": row.get("group", ""), "important": important, "h1b": h1b,
                           "render": row.get("render", "").lower() in ("yes", "y", "true", "1"),
-                          "priority": "high" if important else
+                          "priority": "high" if important or h1b else
                                       ("medium" if priority in ("medium", "mid", "2")
                                        else "normal" if priority in ("normal", "low", "3", "twice a day", "2x")
                                        else "high")})
@@ -1680,10 +1681,15 @@ def badge(text: str, color: str, background: str) -> str:
             f'{html.escape(text)}</span>')
 
 
+H1B_NAMES: set[str] = set()
+
+
 def job_card(name: str, j: Job) -> str:
     esc = html.escape
     label, color, background = FAMILIES[role_family(j.title)]
     badges = [badge(label, color, background)]
+    if name in H1B_NAMES:
+        badges.append(badge("H1B-friendly company", "#0e7490", "#cffafe"))
     if j.sponsor == "no":
         badges.append(badge("⚠ Says no visa sponsorship", "#b42318", "#fde7e5"))
     elif j.sponsor == "yes":
@@ -1748,24 +1754,33 @@ def page_change_jobs(companies: list[dict], results: dict, state: dict, stamp: s
 
 def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
                 recruiters=frozenset(), per_recruiter=3, starred=frozenset(), manual_link="",
-                important=frozenset()) -> str:
+                important=frozenset(), h1b=frozenset()) -> str:
     """The email version: a header, then one card per job, grouped by role type.
     Jobs from recruiters and consulting firms come last, a few per firm."""
     esc = html.escape
     agency = [(n, j) for n, j in new if n in recruiters and n not in important]
     top = [(n, j) for n, j in new if n in important]
     new = [(n, j) for n, j in new if n not in recruiters and n not in important]
+    H1B_NAMES.clear(); H1B_NAMES.update(h1b)
+    visa = [(n, j) for n, j in new if n in h1b]
+    new = [(n, j) for n, j in new if n not in h1b]
     counts = {}
+    for _, j in visa:
+        counts[role_family(j.title)] = counts.get(role_family(j.title), 0) + 1
     for _, j in top:
         counts[role_family(j.title)] = counts.get(role_family(j.title), 0) + 1
     for _, j in new:
         counts[role_family(j.title)] = counts.get(role_family(j.title), 0) + 1
-    if new or agency or top:
-        headline = f"{len(new) + len(top)} new job{'s' if len(new) + len(top) != 1 else ''} for you"
+    if new or agency or top or visa:
+        mine = len(new) + len(top) + len(visa)
+        headline = f"{mine} new job{'s' if mine != 1 else ''} for you"
         summary = "".join(badge(f"{n} {FAMILIES[f][0]}", FAMILIES[f][1], FAMILIES[f][2])
                           for f, n in counts.items())
         if agency:
             summary += badge(f"{len(agency)} from recruiters & consultancies", "#475467", "#eaecf0")
+        h1b_total = sum(1 for n, _ in top + visa + agency if n in h1b)
+        if h1b_total:
+            summary = badge(f"{h1b_total} at H1B-friendly companies", "#0e7490", "#cffafe") + summary
         if top:
             summary = badge(f"★ {len(top)} at important companies", "#101828", "#fef0c7") + summary
     else:
@@ -1776,6 +1791,11 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
                     f'letter-spacing:.05em;text-transform:uppercase;color:#101828">'
                     f'★ Important companies ({len(top)})</div>')
         body.extend(job_card(n, j) for n, j in top)
+    if visa:
+        body.append(f'<div style="margin:22px 0 10px;font-family:{FONT};font-size:13px;font-weight:700;'
+                    f'letter-spacing:.05em;text-transform:uppercase;color:#0e7490">'
+                    f'H1B-friendly companies ({len(visa)})</div>')
+        body.extend(job_card(n, j) for n, j in visa)
     for family, (label, color, _) in FAMILIES.items():
         jobs = [(n, j) for n, j in new if role_family(j.title) == family]
         if not jobs:
@@ -1795,7 +1815,7 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
             if len(jobs) > per_recruiter:
                 body.append(f'<div style="margin:-4px 0 12px;font-family:{FONT};font-size:13px;color:#667085">'
                             f'+{len(jobs) - per_recruiter} more matching jobs at {esc(n)} (all in jobs_log.csv)</div>')
-    if not new and not agency and not top:
+    if not new and not agency and not top and not visa:
         body.append(f'<div style="margin:16px 0;font-family:{FONT};font-size:15px;color:#344054">'
                     f'Nothing new matching your roles was posted in the last {max_age:g} hours.</div>')
     if manual and full_manual_list:
@@ -1843,7 +1863,7 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
 
 def build_message(new, manual, full_manual_list, companies, max_age, checked, ok, when,
                   recruiters=frozenset(), per_recruiter=3, starred=frozenset(), manual_link="",
-                  important=frozenset()):
+                  important=frozenset(), h1b=frozenset()):
     """The message sent after every run: new jobs (or "no new jobs"), then the check-by-hand list.
     Direct employers first; recruiters and consulting firms last, a few jobs each."""
     order = {c["name"]: i + (100000 if c["name"] in recruiters and c["name"] not in important else 0)
@@ -1864,7 +1884,8 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
                 jobs, hidden = jobs[:per_recruiter], len(jobs) - per_recruiter
             text.append(f"\n{'* ' if name in important else ''}{name}"
                         + (" (important company)" if name in important
-                           else " (recruiter / consultancy)" if name in recruiters else ""))
+                           else " (recruiter / consultancy)" if name in recruiters else "")
+                        + (" [H1B-friendly]" if name in h1b else ""))
             rich.append(f"<p style='margin:12px 0 4px'><b>{esc(name)}</b></p><ul style='margin-top:0'>")
             for j in jobs:
                 extra = " - ".join(x for x in (j.location, age_text(j)) if x)
@@ -1911,7 +1932,10 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
                    else f"{agency_count} new recruiter job{'s' if agency_count != 1 else ''}: {who}")
         if direct and agency_count:
             subject += f" (+{agency_count} from recruiters)"
+        h1b_count = sum(1 for n, _ in new if n in h1b)
         top_names = list(dict.fromkeys(n for n, _ in new if n in important))
+        if h1b_count and not top_names:
+            subject += f" ({h1b_count} at H1B-friendly companies)"
         if top_names:
             top_count = sum(1 for n, _ in new if n in important)
             others = len(new) - top_count
@@ -1922,7 +1946,7 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
         subject = f"No new jobs ({when} check)"
     click = new[0][1].url if len(new) == 1 else None
     rich = build_email(new, manual, full_manual_list, checked, ok, when, max_age, recruiters, per_recruiter,
-                       starred, manual_link, important)
+                       starred, manual_link, important, h1b)
     return subject, "\n".join(text).strip(), rich, click
 
 
@@ -2300,7 +2324,8 @@ def run(args) -> int:
                                                len(attempted), ok, when, recruiters,
                                                int(cfg.get("max_jobs_per_recruiter", 3)),
                                                starred, manual_link,
-                                               {c["name"] for c in all_companies if c.get("important")})
+                                               {c["name"] for c in all_companies if c.get("important")},
+                                               {c["name"] for c in all_companies if c.get("h1b")})
     if cfg.get("browser_fallback", True):
         b = BROWSER_STATS
         if not browser_available():
