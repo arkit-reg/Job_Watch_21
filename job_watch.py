@@ -1972,7 +1972,10 @@ def send_resend(subject: str, text: str, rich: str, to: str, key: str):
     except requests.RequestException as e:
         raise RuntimeError(f"couldn't reach Resend ({type(e).__name__})")
     if r.status_code < 300:
-        return
+        try:
+            return (r.json() or {}).get("id", "")
+        except ValueError:
+            return ""
     try:
         detail = r.json().get("message") or r.text
     except ValueError:
@@ -2029,32 +2032,48 @@ def send_email(subject: str, text: str, rich: str, to: str):
     raise RuntimeError(f"couldn't reach the mail server. Last error: {last_error}")
 
 
+def run_summary(line: str) -> None:
+    """Show a line at the top of the GitHub run page (no log digging needed)."""
+    path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if path:
+        try:
+            with open(path, "a", encoding="utf-8") as f:
+                f.write(line + "\n")
+        except OSError:
+            pass
+
+
 def notify(subject: str, text: str, rich: str, click: str | None = None, quiet: bool = False,
            email: bool = True) -> bool:
     """Send the email and the phone push separately, so a problem with one doesn't stop the other.
     Raises only if every configured channel failed."""
-    delivered, problems = 0, []
+    delivered, problems, main_email_failed = 0, [], ""
     to = os.environ.get("EMAIL_TO", "").strip()
     resend_key = os.environ.get("RESEND_API_KEY", "").strip()
     has_login = bool(resend_key or os.environ.get("SMTP_USER", "").strip()
                      or os.environ.get("SMTP_PASSWORD", "").strip())
     if to and email:
         try:
-            if resend_key:
-                send_resend(subject, text, rich, to, resend_key)
-            else:
+            message_id = send_resend(subject, text, rich, to, resend_key) if resend_key else None
+            if not resend_key:
                 send_email(subject, text, rich, to)
             delivered += 1
-            name, _, domain = to.partition("@")
-            print("Email: sent")
+            print("Email: sent" + (f" (Resend ID {message_id})" if message_id else ""))
+            run_summary(f"### ✅ Email sent\n**Subject:** {subject}  \n"
+                        + (f"**Resend ID:** `{message_id}` (look it up at resend.com → Emails to see if Gmail accepted it)  \n"
+                           if message_id else "")
+                        + "Not in your inbox? Check **Spam** and **Promotions**, or search Gmail for “Job Watch”.")
         except Exception as e:
             problems.append(f"Email didn't send: {e}")
+            main_email_failed = str(e)
     elif to:
         print("Email: not sent this run (no new jobs, and email_every_run is false)")
+        run_summary("### Email not sent\nNo new jobs, and `email_every_run` is false in config.toml.")
     elif has_login:
         problems.append("Email didn't send: the EMAIL_TO secret is missing. Its name must be exactly EMAIL_TO")
     else:
         print("Email: not set up (no EMAIL_TO, SMTP_USER or SMTP_PASSWORD secrets)")
+        run_summary("### ⚠ Email not set up\nThe EMAIL_TO and RESEND_API_KEY secrets weren't available to this run.")
     for i in range(2, 6):  # more people: EMAIL_TO_2 with RESEND_API_KEY_2 (their own Resend key), up to _5
         extra_to = os.environ.get(f"EMAIL_TO_{i}", "").strip()
         if not extra_to or not email:
@@ -2089,6 +2108,9 @@ def notify(subject: str, text: str, rich: str, click: str | None = None, quiet: 
             problems.append(f"Phone push didn't send: {e}")
     for problem in problems:
         print(problem, file=sys.stderr)
+    if main_email_failed:  # your own email failing always turns the run red, even if other channels worked
+        run_summary(f"### ❌ Email failed\n{main_email_failed}")
+        raise RuntimeError("Your email didn't send: " + main_email_failed)
     if problems and not delivered:
         raise RuntimeError("; ".join(problems))
     return delivered > 0

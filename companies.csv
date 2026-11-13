@@ -140,7 +140,7 @@ Sandoz,https://www.sandoz.com,,high,,,Your original list
 Viatris,https://www.viatris.com,,high,,,Your original list
 GSK,https://www.gsk.com,,medium,,,Large & mid-size pharma
 CSL Behring,https://www.cslbehring.com,,high,,yes,Large & mid-size pharma
-CSL Seqirus,https://www.seqirus.com,,medium,,,Large & mid-size pharma
+CSL Seqirus,https://www.seqirus.com,,high,,yes,Large & mid-size pharma
 Zoetis,https://www.zoetis.com,,medium,,,Large & mid-size pharma
 Elanco,https://www.elanco.com/en-us/careers/manufacturing-quality,,high,yes,yes,Large & mid-size pharma
 UCB,https://www.ucb.com,,medium,,,Large & mid-size pharma
@@ -655,7 +655,7 @@ Analytical Lab Group,https://www.analyticallabgroup.com/,,normal,,,Added Nov 202
 Galbraith Laboratories,https://www.galbraith.com/,,normal,,,Added Nov 2026 - Testing labs
 Q Laboratories,https://www.qlaboratories.com/,,normal,,,Added Nov 2026 - Testing labs
 ARL Bio Pharma,https://www.arlok.com/,,normal,,,Added Nov 2026 - Testing labs
-CSL,https://www.csl.com/,,normal,,,"Added Nov 2026 - Plasma, vaccines & radiopharma"
+CSL,https://www.csl.com/,,high,,yes,"Added Nov 2026 - Plasma, vaccines & radiopharma"
 LFB USA,https://www.lfb-usa.com/,,normal,,,"Added Nov 2026 - Plasma, vaccines & radiopharma"
 ITM Isotope Technologies Munich,https://www.itm-radiopharma.com/,,normal,,,"Added Nov 2026 - Plasma, vaccines & radiopharma"
 Clarity Pharmaceuticals,https://www.claritypharmaceuticals.com/,,normal,,,"Added Nov 2026 - Plasma, vaccines & radiopharma"
@@ -847,3 +847,6 @@ Guardian Drug Company,https://www.guardiandrug.com/,,high,,yes,H1B-friendly - Ph
 APPCO Pharma,https://www.appcopharma.com/,,high,,yes,H1B-friendly - Pharma & manufacturing
 RK Pharma,https://www.rkpharma.com/,,high,,yes,H1B-friendly - Pharma & manufacturing
 Saptalis Pharmaceuticals,https://www.saptalis.com/,,high,,yes,H1B-friendly - Pharma & manufacturing
+Celltrion USA,https://www.celltrionusa.com/careers/,yes,high,,yes,H1B-friendly - Pharma & manufacturing
+Fujifilm Irvine Scientific,https://www.irvinesci.com/,,high,,yes,H1B-friendly - Pharma & manufacturing
+Fujifilm Cellular Dynamics,https://www.fujifilmcdi.com/,,high,,yes,H1B-friendly - Pharma & manufacturing
