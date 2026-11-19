@@ -2,7 +2,9 @@
 Abbott,https://www.abbott.com/en-us/homepage,couldn't find a job list on the page,2026-11-13
 Adaptimmune,https://www.adaptimmune.com/,couldn't find a job list on the page,2026-10-24
 Aerogen,https://www.aerogen.com/careers-,couldn't find a job list on the page,2026-10-30
+Alcami,https://www.alcami.com,site couldn't be loaded,2026-11-18
 Alkermes,https://www.alkermes.com/careers,couldn't find a job list on the page,2026-10-24
+Amgen,https://amgen.wd1.myworkdayjobs.com/Careers,the site said too many requests (HTTP 429),2026-11-18
 APPCO Pharma,https://www.appcopharma.com/,secure connection to the site failed,2026-11-13
 Artiva Biotherapeutics,https://www.artivabio.com/careers/,couldn't find a job list on the page,2026-10-28
 Ascendia Pharmaceutical Solutions,https://ascendiacdmo.com/careers,couldn't find a job list on the page,2026-10-24
@@ -30,11 +32,15 @@ EditCo Bio,https://www.editco.bio/careers,couldn't find a job list on the page,2
 Endo,https://www.endo.com/,couldn't find a job list on the page,2026-11-10
 Experic,https://www.teamfact.com/de/home,couldn't find a job list on the page,2026-10-26
 Fennec Pharmaceuticals,https://fennecpharma.com/careers/,couldn't find a job list on the page,2026-10-24
+Gilead Sciences,https://gilead.wd1.myworkdayjobs.com/gileadcareers,the site said too many requests (HTTP 429),2026-11-18
 Granules Pharmaceuticals,https://www.granulesindia.com/,couldn't find a job list on the page,2026-10-26
 Grifols,https://grifols.jobs/jobs/?q=quality,site couldn't be loaded,2026-11-06
 Guardian Drug Company,https://www.guardiandrug.com/careers/,couldn't find a job list on the page,2026-11-13
 Ingenus Pharmaceuticals,https://www.ingenus.com/careers,couldn't find a job list on the page,2026-10-26
 Intellectt,https://www.intellectt.com/,couldn't find a job list on the page,2026-11-13
+Intellia Therapeutics,https://www.intelliatx.com/careers/,couldn't find a job list on the page,2026-11-18
+IQVIA,https://jobs.iqvia.com/en/search-jobs?utm_source=iqvia.com&utm_medium=referral&utm_campaign=careersnav,couldn't find a job list on the page,2026-11-18
+Jazz Pharmaceuticals,https://www.jazzpharma.com,site couldn't be loaded,2026-11-18
 Leading Pharma,https://www.leadingpharma.com/index.php/contacts/careers,couldn't find a job list on the page,2026-11-17
 Lonza,https://www.lonza.com,the site blocks automated visits (HTTP 403),2026-10-24
 Merakris Therapeutics,https://merakris.com/,couldn't find a job list on the page,2026-10-24
@@ -52,6 +58,8 @@ Saptalis Pharmaceuticals,https://www.saptalis.com/,couldn't find a job list on t
 SGS,https://www.sgs.com/en/our-company/careers-at-sgs,couldn't find a job list on the page,2026-10-26
 Smith+Nephew,https://www.smith-nephew.com/en-us/,couldn't find a job list on the page,2026-11-13
 Spectrum Chemical,https://www.spectrumchemical.com,the site blocks automated visits (HTTP 403),2026-10-24
+STC Biologics,https://www.stcbiologics.com,site couldn't be loaded,2026-11-18
+Sterling Pharma Solutions,https://www.sterlingpharmasolutions.com,site couldn't be loaded,2026-11-18
 Teva Pharmaceuticals,https://www.tevapharm.com/,couldn't find a job list on the page,2026-10-24
 Tris Pharma,https://www.trispharma.com/,couldn't find a job list on the page,2026-10-26
 TScan Therapeutics,https://www.tscan.com/careers/,couldn't find a job list on the page,2026-11-17
@@ -84,6 +92,7 @@ Menarini Stemline,https://stemline.com/,couldn't find a job list on the page,202
 Novadoz Pharmaceuticals,https://novadozpharma.com/current-openings/,couldn't find a job list on the page,2026-10-26
 Octapharma USA,https://www.octapharmausa.com/career,couldn't find a job list on the page,2026-11-09
 Pharmacosmos,https://pharmacosmos.com/career,couldn't find a job list on the page,2026-10-28
+Prasco,https://www.prasco.com,site couldn't be loaded,2026-11-18
 Quotient Sciences,https://www.quotientsciences.com/,couldn't find a job list on the page,2026-10-26
 SK pharmteco,https://www.skpharmteco.com,the site blocks automated visits (HTTP 403),2026-10-26
 SOFIE,https://sofie.com/careers/,couldn't find a job list on the page,2026-10-26
@@ -114,6 +123,7 @@ ARL Bio Pharma,https://www.arlok.com/careers/,couldn't find a job list on the pa
 ArriVent BioPharma,https://arrivent.com/careers/,couldn't find a job list on the page,2026-11-10
 Artech,https://www.artech.com/careers/consultant-jobs,couldn't find a job list on the page,2026-10-26
 Ascent Pharmaceuticals,https://www.ascentpharm.com/,couldn't find a job list on the page,2026-11-10
+Ascidian Therapeutics,https://www.ascidian-tx.com/,couldn't find a job list on the page,2026-11-18
 Asher Bio,https://asherbio.com/careers/,couldn't find a job list on the page,2026-11-10
 Assertio Therapeutics,https://www.assertiotx.com/,couldn't find a job list on the page,2026-11-10
 Asymchem,https://www.asymchem.com/,couldn't find a job list on the page,2026-11-10
@@ -201,6 +211,7 @@ Inovio Pharmaceuticals,https://inovio.com/careers/,couldn't find a job list on t
 insitro,https://www.insitro.com/join-us/,couldn't find a job list on the page,2026-11-10
 Interius BioTherapeutics,https://www.interiusbio.com/,the site didn't respond in time,2026-11-11
 Ionetix,https://ionetix.com/careers,couldn't find a job list on the page,2026-11-10
+Journey Medical,https://www.journeymedicalcorp.com/,couldn't find a job list on the page,2026-11-18
 Kalvista Pharmaceuticals,https://www.kalvista.com/careers/,couldn't find a job list on the page,2026-10-26
 Kelonia Therapeutics,https://www.kelonia.com/,secure connection to the site failed,2026-11-11
 Kezar Life Sciences,https://www.auriniapharma.com/company/careers,couldn't find a job list on the page,2026-11-10
