@@ -1,5 +1,5 @@
 ﻿Company,Check here,Why,On this list since
-Abbott,https://www.abbott.com/en-us/homepage,couldn't find a job list on the page,2026-11-13
+Abbott,https://www.abbott.com/en-us/homepage?dclid=CKfygefWlJgDFdJcnQYdwkcwlQ&gad_source=7&gad_campaignid=24422308223,couldn't find a job list on the page,2026-11-13
 Adaptimmune,https://www.adaptimmune.com/,couldn't find a job list on the page,2026-10-24
 Aerogen,https://www.aerogen.com/careers-,couldn't find a job list on the page,2026-10-30
 Alcami,https://www.alcami.com,site couldn't be loaded,2026-11-18
@@ -61,6 +61,7 @@ STC Biologics,https://www.stcbiologics.com,site couldn't be loaded,2026-11-18
 Sterling Pharma Solutions,https://www.sterlingpharmasolutions.com,site couldn't be loaded,2026-11-18
 Teva Pharmaceuticals,https://www.tevapharm.com/,couldn't find a job list on the page,2026-10-24
 Tris Pharma,https://www.trispharma.com/,couldn't find a job list on the page,2026-10-26
+TScan Therapeutics,https://www.tscan.com/careers/,couldn't connect to the site,2026-11-19
 Ultragenyx,https://www.ultragenyx.com/join-our-team/,couldn't find a job list on the page,2026-10-24
 Unicon Pharma,https://uniconpharma.com/,couldn't find a job list on the page,2026-11-13
 United Therapeutics,https://www.unither.com/index,couldn't find a job list on the page,2026-10-24
@@ -136,7 +137,6 @@ Be Bio,https://be.bio/,couldn't connect to the site,2026-11-11
 Beacon Therapeutics,https://beacontx.isolvedhire.com/jobs/,couldn't find a job list on the page,2026-11-17
 Belcher Pharmaceuticals,https://www.belcherpharma.com/,couldn't find a job list on the page,2026-11-10
 Berkshire Sterile Manufacturing,https://www.berkshiresterilemanufacturing.com/,the site blocks automated visits (HTTP 403),2026-11-16
-Best Formulations,https://sirioamericas.com/careers/,couldn't find a job list on the page,2026-11-10
 Bimeda,https://www.bimedacareers.com/,couldn't find a job list on the page,2026-11-10
 BioAtla,https://www.bioatla.com/about/,couldn't find a job list on the page,2026-11-10
 Biohaven,https://www.biohaven.com/careers/,couldn't find a job list on the page,2026-10-26
@@ -188,6 +188,7 @@ Ergomed,https://www.ergomedplc.com/,the site returned an error (HTTP 503),2026-1
 Esperion,https://www.esperion.com,the site didn't respond in time,2026-10-27
 Eton Pharmaceuticals,https://www.etonpharma.com/careers/,couldn't find a job list on the page,2026-10-26
 EyePoint Pharmaceuticals,https://www.eyepointpharma.com/,couldn't find a job list on the page,2026-11-18
+Fagron,https://fagron.jobsmarket.site/pages/en-gb/jobs,couldn't find a job list on the page,2026-11-19
 Foghorn Therapeutics,https://www.foghorntx.com,the site blocks automated visits (HTTP 403),2026-10-27
 Fulcrum Therapeutics,https://www.fulcrumtx.com/careers/,couldn't find a job list on the page,2026-11-11
 Galectin Therapeutics,https://galectintherapeutics.com/careers/,couldn't find a job list on the page,2026-11-10
@@ -210,7 +211,7 @@ Interius BioTherapeutics,https://www.interiusbio.com/,the site didn't respond in
 Ionetix,https://ionetix.com/careers,couldn't find a job list on the page,2026-11-10
 Journey Medical,https://www.journeymedicalcorp.com/,couldn't find a job list on the page,2026-11-18
 Kalvista Pharmaceuticals,https://www.kalvista.com/careers/,couldn't find a job list on the page,2026-10-26
-Kelonia Therapeutics,https://www.kelonia.com/,secure connection to the site failed,2026-11-11
+Kelonia Therapeutics,https://ww16.kelonia.com/?sub1=20261120-0551-16a1-a58f-f8f467969559,couldn't find a job list on the page,2026-11-11
 Kezar Life Sciences,https://www.auriniapharma.com/company/careers,couldn't find a job list on the page,2026-11-10
 Korro Bio,https://www.korrobio.com/,couldn't find a job list on the page,2026-11-18
 Kriya Therapeutics,https://kriyatx.pinpointhq.com/en,couldn't find a job list on the page,2026-10-26
@@ -283,7 +284,6 @@ Santen,https://www.santen.com/santen_global,couldn't find a job list on the page
 Scribe Therapeutics,https://www.scribetx.com/careers,couldn't find a job list on the page,2026-11-10
 Scynexis,https://www.scynexis.com/careers/,couldn't find a job list on the page,2026-11-10
 Seres Therapeutics,https://www.serestherapeutics.com/open-positions/,couldn't find a job list on the page,2026-11-10
-Slayback Pharma,https://www.azurity.com,couldn't find a job list on the page,2026-11-10
 Solid Biosciences,https://www.solidbio.com/about/working-at-solid/open-positions/,couldn't find a job list on the page,2026-10-26
 Somerset Therapeutics,https://somersetpharma.com/current-positions/,couldn't find a job list on the page,2026-11-10
 Sovereign Pharmaceuticals,https://www.sovereignpharma.com/,couldn't find a job list on the page,2026-11-10
@@ -295,7 +295,7 @@ Tedor Pharma,https://tedorpharma.com/about-us/careers/,couldn't find a job list 
 Tenaya Therapeutics,https://www.tenayatherapeutics.com/careers/,couldn't find a job list on the page,2026-11-10
 TG Therapeutics,https://www.tgtherapeutics.com/about-us/join-us/,couldn't find a job list on the page,2026-11-12
 Theratechnologies,https://theratech.com/careers/,couldn't find a job list on the page,2026-11-10
-Theravance Biopharma,https://www.zymeworks.com/,couldn't find a job list on the page,2026-10-26
+Theravance Biopharma,https://www.zymeworks.com,couldn't find a job list on the page,2026-10-26
 Time-Cap Labs,https://www.timecaplabs.com/,couldn't find a job list on the page,2026-11-10
 Tjoapack,https://www.tjoapack.com/careers,couldn't find a job list on the page,2026-11-10
 Trevena,https://www.trevena.com/careers,couldn't find a job list on the page,2026-11-10
