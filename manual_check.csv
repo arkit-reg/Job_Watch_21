@@ -7,6 +7,7 @@ APPCO Pharma,https://www.appcopharma.com/,secure connection to the site failed,2
 Artiva Biotherapeutics,https://www.artivabio.com/careers/,couldn't find a job list on the page,2026-10-28
 Ascendia Pharmaceutical Solutions,https://ascendiacdmo.com/careers,couldn't find a job list on the page,2026-10-24
 Astellas Pharma,https://www.astellas.com/en,couldn't find a job list on the page,2026-10-24
+AstraZeneca,https://astrazeneca.wd3.myworkdayjobs.com/Careers,the site said too many requests (HTTP 429),2026-11-21
 Azurity Pharmaceuticals,https://www.azurity.com/,couldn't find a job list on the page,2026-10-24
 Bactolac Pharmaceutical,https://bactolac.com/careers/,couldn't find a job list on the page,2026-11-15
 Bayer,https://nordiccareers.bayer.com/jobs,couldn't find a job list on the page,2026-11-17
@@ -30,6 +31,7 @@ EditCo Bio,https://www.editco.bio/careers,couldn't find a job list on the page,2
 Endo,https://www.endo.com/,couldn't find a job list on the page,2026-11-10
 Experic,https://www.teamfact.com/de/home,couldn't find a job list on the page,2026-10-26
 Fennec Pharmaceuticals,https://fennecpharma.com/careers/,couldn't find a job list on the page,2026-10-24
+Genentech (Roche),https://roche.wd3.myworkdayjobs.com/roche-ext,the site said too many requests (HTTP 429),2026-11-21
 Glenmark Pharmaceuticals USA,https://glenmarkpharma-us.com/careers-at-glenmark/career-search/,couldn't find a job list on the page,2026-11-21
 Granules Pharmaceuticals,https://www.granulesindia.com/,couldn't find a job list on the page,2026-10-26
 Grifols,https://grifols.jobs/jobs/?q=quality,site couldn't be loaded,2026-11-06
@@ -40,6 +42,7 @@ Lonza,https://www.lonza.com,the site blocks automated visits (HTTP 403),2026-10-
 Merakris Therapeutics,https://merakris.com/,couldn't find a job list on the page,2026-10-24
 Mirum Pharmaceuticals,https://mirumpharma.com/careers/,couldn't find a job list on the page,2026-10-24
 Navinta,https://www.navinta.com/careers,couldn't find a job list on the page,2026-11-13
+Novartis,https://novartis.wd3.myworkdayjobs.com/Novartis_Careers,the site said too many requests (HTTP 429),2026-11-21
 Nucleus RadioPharma,https://www.nucleusradiopharma.com/,couldn't find a job list on the page,2026-10-24
 Partner Therapeutics,https://careers.partnertx.com/careers/,couldn't find a job list on the page,2026-10-24
 Pharbest Pharmaceuticals,https://www.pharbest.com/,couldn't connect to the site,2026-11-13
@@ -54,7 +57,7 @@ Smith+Nephew,https://www.smith-nephew.com/en-us/,couldn't find a job list on the
 Spectrum Chemical,https://www.spectrumchemical.com,the site blocks automated visits (HTTP 403),2026-10-24
 Teva Pharmaceuticals,https://www.tevapharm.com/,couldn't find a job list on the page,2026-10-24
 Tris Pharma,https://www.trispharma.com/,couldn't find a job list on the page,2026-10-26
-TScan Therapeutics,https://www.tscan.com/careers/,couldn't connect to the site,2026-11-21
+TScan Therapeutics,https://www.tscan.com/careers/,couldn't find a job list on the page,2026-11-21
 Ultragenyx,https://www.ultragenyx.com,the site blocks automated visits (HTTP 403),2026-11-21
 Unicon Pharma,https://uniconpharma.com/,couldn't find a job list on the page,2026-11-13
 United Therapeutics,https://www.unither.com/index,couldn't find a job list on the page,2026-10-24
