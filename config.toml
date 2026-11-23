@@ -31,7 +31,9 @@ include = [
   "nonconformance", "non-conformance", "root cause",
 
   # --- Floor QA, inspection and release ---
-  "IPQA", "in-process QA", "in-process quality", "QA inspector", "quality inspector", "inspection associate", "inspection technician", "visual inspection",
+  "IPQA", "in-process QA", "in-process quality",
+  "quality control", "QC", "QC analyst", "QC associate", "QC specialist", "QC inspector", "QC technician",
+  "quality technician", "microbiology technician", "environmental monitoring", "QA inspector", "quality inspector", "inspection associate", "inspection technician", "visual inspection",
   "product release", "release specialist", "material release", "incoming inspection",
   "vendor qualification", "supplier qualification",
 
@@ -79,10 +81,10 @@ exclude = [
 # skip jobs outside the US (uses the job system's country, the location, then the description)
 us_only = true
 # skip jobs whose lowest experience requirement is above this ("Bachelor's + 5 or Master's + 3" counts as 3)
-max_years_experience = 2
+max_years_experience = 3
 # Experience limit for companies marked important in companies.csv (raise to 3 or 4 if a referral
 # could get you considered for slightly more senior roles there)
-important_max_years_experience = 2
+important_max_years_experience = 4
 
 # Typed into the search box on Workday sites (most big pharma), one search per term.
 # Workday search is fuzzy, so keep these broad; the include/exclude lists above do the real filtering.
@@ -115,7 +117,7 @@ location_exclude = [
 # Only send jobs posted within this many hours (0 = no limit).
 # Workday sites only show whole days, so 72 keeps "Today", "Yesterday" and "2 Days Ago".
 # Sites that show no posting date: a job counts as new when it first appears (checked every 3 hours).
-max_age_hours = 72
+max_age_hours = 336   # 14 days: also catches roles at sites read for the first time
 
 # Third source: JSearch = Google Jobs data (LinkedIn, Indeed, Glassdoor, ZipRecruiter, company sites).
 # Free plan: 200 searches a month. 3 searches x 2 time slots a day x 30 days = 180.
@@ -152,6 +154,27 @@ check_by_hand_retry_hours = 24
 # Never repeat: a job counts as already sent if its link was sent before (under any company name),
 # or this company already sent the same job title at any location.
 never_repeat_title = true
+
+# Re-check every open job once against the current filters (jobs already emailed are never resent).
+# Change the date to run it again after changing filters.
+recheck_open_jobs_once = "2026-11-12"
+
+# ---- Top picks: the jobs to apply to first, at the top of every email ----
+# Each job is scored on: your strongest experience found in the description (below), experience asked,
+# your company tags (important / H1B-friendly / immigrant-friendly), sponsorship wording, how recent, and location.
+top_picks = 5                      # how many to show (0 turns the section off)
+top_picks_min_jobs = 3             # only show the section when an email has at least this many jobs
+# 3 points each: your strongest, most specific experience (from your master resume)
+fit_strong = ["document control", "controlled document", "batch record", "good documentation practice", "GDP",
+              "deviation", "CAPA", "change control", "SOP", "standard operating procedure", "document management",
+              "EDMS", "line clearance", "annual product review", "APQR", "gap assessment", "data integrity", "ALCOA",
+              "CTD", "eCTD", "CMC", "regulatory submission", "dossier"]
+# 1 point each: relevant background that most postings in your field mention
+fit_good = ["GMP", "cGMP", "quality systems", "quality assurance", "audit", "inspection readiness", "self-inspection",
+            "training records", "regulatory affairs", "ICH", "FDA", "validation", "labeling", "biologics", "release",
+            "product complaints", "investigation", "pharmaceutical"]
+home_state = "MA"                  # a small bonus for jobs here, and a smaller one for nearby states
+nearby_states = ["NH", "RI", "CT", "ME", "VT", "NY", "NJ"]
 
 # Recruiters and consulting firms (the groups in companies.csv with "recruit" or "consult" in the name)
 # come last in each email, with at most this many jobs per firm. Set include_recruiters = false to drop them.

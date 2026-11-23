@@ -1509,10 +1509,14 @@ def title_key(job: Job) -> str:
     return re.sub(r"[^a-z0-9]+", " ", f"{job.title} | {job.location}".lower()).strip()
 
 
+SENIOR_ASSOCIATE = re.compile(r"\b(?:senior|sr\.?)\s+(?=associate\b)", re.I)
+
+
 def matches(job: Job, f: dict) -> bool:
     if not any(p.search(job.title) for p in f["include"]):
         return False
-    if any(p.search(job.title) for p in f["exclude"]):
+    title = SENIOR_ASSOCIATE.sub("", job.title)  # "Senior Associate, QA" is early-career in pharma
+    if any(p.search(title) for p in f["exclude"]):
         return False
     loc = job.location
     if not loc or re.fullmatch(r"\d+ Locations?", loc):  # unknown location: check the job card, else keep it
@@ -1570,9 +1574,11 @@ def load_companies(only: str | None = None) -> list[dict]:
         priority = row.get("priority", "").lower()
         important = row.get("important", "").strip().lower() in ("yes", "y", "true", "1", "important", "★")
         h1b = row.get("h1b", "").strip().lower() in ("yes", "y", "true", "1", "h1b")
+        immigrant = row.get("immigrant", "").strip().lower() in ("yes", "y", "true", "1")
         companies.append({"name": name, "url": url, "group": row.get("group", ""), "important": important, "h1b": h1b,
+                          "immigrant": immigrant,
                           "render": row.get("render", "").lower() in ("yes", "y", "true", "1"),
-                          "priority": "high" if important or h1b else
+                          "priority": "high" if important or h1b or immigrant else
                                       ("medium" if priority in ("medium", "mid", "2")
                                        else "normal" if priority in ("normal", "low", "3", "twice a day", "2x")
                                        else "high")})
@@ -1651,6 +1657,7 @@ FAMILIES = {  # tag text, text color, background
     "QA": ("Quality Assurance", "#1d4ed8", "#e0eaff"),
     "RA": ("Regulatory Affairs", "#7e22ce", "#f1e6ff"),
     "Validation": ("Validation / CSV", "#0f766e", "#d6f5ee"),
+    "QC": ("Quality Control", "#4338ca", "#e0e7ff"),
     "Manufacturing": ("Manufacturing / Operations", "#b45309", "#fef3c7"),
     "Clinical": ("Clinical documents & safety", "#be185d", "#fce7f3"),
 }
@@ -1666,6 +1673,9 @@ def role_family(title: str) -> str:
     if re.search(r"\be?TMF\b|trial master|clinical (?:document|trial)|pharmacovigilance|drug safety|\bPV\b"
                  r"|case processing", title, re.I):
         return "Clinical"
+    if re.search(r"quality control|\bQC\b|microbiology technician|environmental monitoring", title, re.I) \
+            and not re.search(r"\b(?:IP)?QA\b|quality assurance", title, re.I):
+        return "QC"
     if re.search(r"quality|\b(?:IP)?QA\b|CAPA|deviation|investigat|complaint|inspect|release|document|records?\b"
                  r"|technical writer|SOP|training|compliance|GxP|GMP (?:compliance|auditor)", title, re.I):
         return "QA"
@@ -1682,6 +1692,82 @@ def badge(text: str, color: str, background: str) -> str:
 
 
 H1B_NAMES: set[str] = set()
+IMMIGRANT_NAMES: set[str] = set()
+FIT: dict = {}   # Top picks settings, set from config.toml at the start of each run
+
+
+def _has(term: str, text: str) -> bool:
+    return re.search(r"(?<![A-Za-z0-9])" + re.escape(term) + r"(?![A-Za-z0-9])", text,
+                     0 if term.isupper() else re.I) is not None
+
+
+def fit_score(name: str, j: Job, important=frozenset(), h1b=frozenset(), immigrant=frozenset(),
+              recruiters=frozenset()) -> tuple[int, list[str]]:
+    """How well a job fits you, with the reasons, using only your own experience and the job's facts."""
+    text = " ".join([j.title, j.text or "", j.description or ""])
+    score, why = 0, []
+    strong = [t for t in FIT.get("strong", []) if _has(t, text)]
+    good = [t for t in FIT.get("good", []) if _has(t, text)]
+    score += min(3 * len(strong) + len(good), 15)
+    if strong:
+        why.append("Strong fit: " + ", ".join(strong[:3]))
+    elif good:
+        why.append("Fits: " + ", ".join(good[:3]))
+    if role_family(j.title) in ("QA", "RA", "Validation", "Clinical"):
+        score += 2
+    years = int(j.years.split("+")[0]) if j.years[:1].isdigit() else None
+    if years is None:
+        score += 1
+    else:
+        score += {0: 3, 1: 3, 2: 2, 3: 1}.get(years, -1)
+        why.append(f"asks {years}+ yrs")
+    if name in important:
+        score += 4; why.append("\u2605 referral possible")
+    if name in h1b:
+        score += 2; why.append("H1B-friendly")
+    elif name in immigrant:
+        score += 1; why.append("immigrant-friendly")
+    if j.sponsor == "yes":
+        score += 2; why.append("mentions sponsorship")
+    elif j.sponsor == "no":
+        score -= 4; why.append("says no sponsorship")
+    if j.posted_at:
+        hours = (NOW - j.posted_at).total_seconds() / 3600
+        if hours <= 24:
+            score += 3; why.append("posted today")
+        elif hours <= 48:
+            score += 2; why.append("posted yesterday")
+        elif hours <= 168:
+            score += 1
+    state = re.search(r"\b([A-Z]{2})\b(?!.*\b[A-Z]{2}\b)", j.location or "")
+    if state and state.group(1) == FIT.get("home"):
+        score += 2; why.append(state.group(1))
+    elif state and state.group(1) in FIT.get("nearby", ()):
+        score += 1
+    if name in recruiters:
+        score -= 1
+    return score, why
+
+
+def top_picks_html(jobs, important, h1b, immigrant, recruiters) -> str:
+    n = int(FIT.get("top", 5) or 0)
+    if not n or len(jobs) < int(FIT.get("min_jobs", 3)):
+        return ""
+    esc = html.escape
+    ranked = sorted(jobs, key=lambda nj: -fit_score(*nj, important, h1b, immigrant, recruiters)[0])[:n]
+    rows = []
+    for i, (name, j) in enumerate(ranked, 1):
+        _, why = fit_score(name, j, important, h1b, immigrant, recruiters)
+        rows.append(f'<tr><td style="padding:8px 10px 8px 0;vertical-align:top;font-family:{FONT};font-size:15px;'
+                    f'font-weight:700;color:#101828">{i}</td>'
+                    f'<td style="padding:8px 0;border-top:1px solid #eaecf0;font-family:{FONT}">'
+                    f'<a href="{esc(j.url)}" style="font-size:14px;font-weight:700;color:#1d4ed8;text-decoration:none">{esc(j.title)}</a>'
+                    f'<div style="font-size:13px;color:#344054">{esc(name)}{" · " + esc(j.location) if j.location else ""}</div>'
+                    f'<div style="font-size:12px;color:#667085;margin-top:2px">{esc(" · ".join(why))}</div></td></tr>')
+    return (f'<div style="margin:18px 0 6px;font-family:{FONT};font-size:13px;font-weight:700;letter-spacing:.05em;'
+            f'text-transform:uppercase;color:#101828">Top picks: apply to these first</div>'
+            f'<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;'
+            f'background:#f9fafb;border:1px solid #eaecf0;border-radius:10px;padding:4px 12px">{"".join(rows)}</table>')
 
 
 def job_card(name: str, j: Job) -> str:
@@ -1690,6 +1776,8 @@ def job_card(name: str, j: Job) -> str:
     badges = [badge(label, color, background)]
     if name in H1B_NAMES:
         badges.append(badge("H1B-friendly company", "#0e7490", "#cffafe"))
+    if name in IMMIGRANT_NAMES:
+        badges.append(badge("Immigrant-friendly company", "#166534", "#dcfce7"))
     if j.sponsor == "no":
         badges.append(badge("⚠ Says no visa sponsorship", "#b42318", "#fde7e5"))
     elif j.sponsor == "yes":
@@ -1754,7 +1842,7 @@ def page_change_jobs(companies: list[dict], results: dict, state: dict, stamp: s
 
 def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
                 recruiters=frozenset(), per_recruiter=3, starred=frozenset(), manual_link="",
-                important=frozenset(), h1b=frozenset()) -> str:
+                important=frozenset(), h1b=frozenset(), immigrant=frozenset()) -> str:
     """The email version: a header, then one card per job, grouped by role type.
     Jobs from recruiters and consulting firms come last, a few per firm."""
     esc = html.escape
@@ -1762,22 +1850,28 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
     top = [(n, j) for n, j in new if n in important]
     new = [(n, j) for n, j in new if n not in recruiters and n not in important]
     H1B_NAMES.clear(); H1B_NAMES.update(h1b)
+    IMMIGRANT_NAMES.clear(); IMMIGRANT_NAMES.update(immigrant)
     visa = [(n, j) for n, j in new if n in h1b]
     new = [(n, j) for n, j in new if n not in h1b]
+    welcoming = [(n, j) for n, j in new if n in immigrant]
+    new = [(n, j) for n, j in new if n not in immigrant]
     counts = {}
-    for _, j in visa:
+    for _, j in visa + welcoming:
         counts[role_family(j.title)] = counts.get(role_family(j.title), 0) + 1
     for _, j in top:
         counts[role_family(j.title)] = counts.get(role_family(j.title), 0) + 1
     for _, j in new:
         counts[role_family(j.title)] = counts.get(role_family(j.title), 0) + 1
-    if new or agency or top or visa:
-        mine = len(new) + len(top) + len(visa)
+    if new or agency or top or visa or welcoming:
+        mine = len(new) + len(top) + len(visa) + len(welcoming)
         headline = f"{mine} new job{'s' if mine != 1 else ''} for you"
         summary = "".join(badge(f"{n} {FAMILIES[f][0]}", FAMILIES[f][1], FAMILIES[f][2])
                           for f, n in counts.items())
         if agency:
             summary += badge(f"{len(agency)} from recruiters & consultancies", "#475467", "#eaecf0")
+        immigrant_total = sum(1 for n, _ in top + visa + welcoming + agency if n in immigrant)
+        if immigrant_total:
+            summary = badge(f"{immigrant_total} at immigrant-friendly companies", "#166534", "#dcfce7") + summary
         h1b_total = sum(1 for n, _ in top + visa + agency if n in h1b)
         if h1b_total:
             summary = badge(f"{h1b_total} at H1B-friendly companies", "#0e7490", "#cffafe") + summary
@@ -1785,7 +1879,7 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
             summary = badge(f"★ {len(top)} at important companies", "#101828", "#fef0c7") + summary
     else:
         headline, summary = "No new jobs this check", ""
-    body = []
+    body = [top_picks_html(top + visa + welcoming + new + agency, important, h1b, immigrant, recruiters)]
     if top:
         body.append(f'<div style="margin:22px 0 10px;font-family:{FONT};font-size:13px;font-weight:700;'
                     f'letter-spacing:.05em;text-transform:uppercase;color:#101828">'
@@ -1796,6 +1890,11 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
                     f'letter-spacing:.05em;text-transform:uppercase;color:#0e7490">'
                     f'H1B-friendly companies ({len(visa)})</div>')
         body.extend(job_card(n, j) for n, j in visa)
+    if welcoming:
+        body.append(f'<div style="margin:22px 0 10px;font-family:{FONT};font-size:13px;font-weight:700;'
+                    f'letter-spacing:.05em;text-transform:uppercase;color:#166534">'
+                    f'Immigrant-friendly companies ({len(welcoming)})</div>')
+        body.extend(job_card(n, j) for n, j in welcoming)
     for family, (label, color, _) in FAMILIES.items():
         jobs = [(n, j) for n, j in new if role_family(j.title) == family]
         if not jobs:
@@ -1815,7 +1914,7 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
             if len(jobs) > per_recruiter:
                 body.append(f'<div style="margin:-4px 0 12px;font-family:{FONT};font-size:13px;color:#667085">'
                             f'+{len(jobs) - per_recruiter} more matching jobs at {esc(n)} (all in jobs_log.csv)</div>')
-    if not new and not agency and not top and not visa:
+    if not new and not agency and not top and not visa and not welcoming:
         body.append(f'<div style="margin:16px 0;font-family:{FONT};font-size:15px;color:#344054">'
                     f'Nothing new matching your roles was posted in the last {max_age:g} hours.</div>')
     if manual and full_manual_list:
@@ -1863,12 +1962,18 @@ def build_email(new, manual, full_manual_list, checked, ok, when, max_age,
 
 def build_message(new, manual, full_manual_list, companies, max_age, checked, ok, when,
                   recruiters=frozenset(), per_recruiter=3, starred=frozenset(), manual_link="",
-                  important=frozenset(), h1b=frozenset()):
+                  important=frozenset(), h1b=frozenset(), immigrant=frozenset()):
+    picks = []
+    if new and int(FIT.get("top", 5) or 0) and len(new) >= int(FIT.get("min_jobs", 3)):
+        ranked = sorted(new, key=lambda nj: -fit_score(*nj, important, h1b, immigrant, recruiters)[0])[:int(FIT.get("top", 5))]
+        picks = ["TOP PICKS (apply to these first):"] + [
+            f"  {i}. {j.title} - {n} - {' · '.join(fit_score(n, j, important, h1b, immigrant, recruiters)[1])}  {j.url}"
+            for i, (n, j) in enumerate(ranked, 1)] + [""]
     """The message sent after every run: new jobs (or "no new jobs"), then the check-by-hand list.
     Direct employers first; recruiters and consulting firms last, a few jobs each."""
     order = {c["name"]: i + (100000 if c["name"] in recruiters and c["name"] not in important else 0)
                  - (200000 if c["name"] in important else 0) for i, c in enumerate(companies)}
-    text, rich = [], ['<div style="font-family:Calibri,Arial,sans-serif;font-size:15px">']
+    text, rich = list(picks), ['<div style="font-family:Calibri,Arial,sans-serif;font-size:15px">']
     esc = html.escape
 
     if new:
@@ -1885,7 +1990,8 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
             text.append(f"\n{'* ' if name in important else ''}{name}"
                         + (" (important company)" if name in important
                            else " (recruiter / consultancy)" if name in recruiters else "")
-                        + (" [H1B-friendly]" if name in h1b else ""))
+                        + (" [H1B-friendly]" if name in h1b else "")
+                        + (" [Immigrant-friendly]" if name in immigrant else ""))
             rich.append(f"<p style='margin:12px 0 4px'><b>{esc(name)}</b></p><ul style='margin-top:0'>")
             for j in jobs:
                 extra = " - ".join(x for x in (j.location, age_text(j)) if x)
@@ -1946,7 +2052,7 @@ def build_message(new, manual, full_manual_list, companies, max_age, checked, ok
         subject = f"No new jobs ({when} check)"
     click = new[0][1].url if len(new) == 1 else None
     rich = build_email(new, manual, full_manual_list, checked, ok, when, max_age, recruiters, per_recruiter,
-                       starred, manual_link, important, h1b)
+                       starred, manual_link, important, h1b, immigrant)
     return subject, "\n".join(text).strip(), rich, click
 
 
@@ -2030,6 +2136,9 @@ def send_email(subject: str, text: str, rich: str, to: str):
             if attempt < len(methods) - 1:
                 time.sleep(5)
     raise RuntimeError(f"couldn't reach the mail server. Last error: {last_error}")
+
+
+FUNNEL: dict[str, int] = {}
 
 
 def run_summary(line: str) -> None:
@@ -2141,10 +2250,20 @@ def print_check(name, source, jobs, results):
 def run(args) -> int:
     cfg = load_config()
     filters = build_filters(cfg)
+    FIT.update(top=cfg.get("top_picks", 5), min_jobs=cfg.get("top_picks_min_jobs", 3),
+               strong=list(cfg.get("fit_strong", [])), good=list(cfg.get("fit_good", [])),
+               home=str(cfg.get("home_state", "MA")), nearby=set(cfg.get("nearby_states", [])))
     companies = load_companies(args.company)
     state = load_state()
     legacy = state.get("version") != 2 and bool(state.get("seen"))  # state saved by the first version
     seen_all = state.setdefault("seen", {})    # every matching job ID ever noticed
+    recheck = str(cfg.get("recheck_open_jobs_once", "") or "")
+    if recheck and state.get("rechecked") != recheck and not args.check and not args.company:
+        # judge every open job again by today's filters; "sent" is kept, so nothing is emailed twice
+        print(f"One-time re-check ({recheck}): every open job is judged again by the current filters.")
+        for company in seen_all.values():
+            company.clear()
+        state["rechecked"] = recheck
     sent_all = state.setdefault("sent", {})    # title + location of every job ever sent to you
     failures = state.setdefault("failures", {})
     counts = state.setdefault("counts", {})
@@ -2249,6 +2368,10 @@ def run(args) -> int:
                 sent[key] = sent[tkey] = sent_urls[ukey] = stamp
             seen.setdefault(j.id, stamp)
             statuses.append((j, status))
+            bucket = ("new" if status == "NEW" else "already sent to you" if "sent" in status or "above" in status
+                      else "seen in an earlier run" if status == "seen before" else
+                      "posted too long ago" if status.startswith("older") else "no posting date (first look at site)")
+            FUNNEL[bucket] = FUNNEL.get(bucket, 0) + 1
         if args.check:
             check_blocks.append((name, source, jobs, statuses))
             if not jobs:
@@ -2287,6 +2410,17 @@ def run(args) -> int:
             for k in (title_key(j), "t:" + plain_title(j)):  # never sent, so don't block a later re-post
                 sent_all.get(name, {}).pop(k, None)
             sent_urls.pop(url_key(j.url), None)
+    matched = sum(FUNNEL.values())
+    lines = [f"### Job funnel\n**{matched}** open jobs matched your role titles at the companies checked.", "",
+             "| What happened | Jobs |", "|---|---|"]
+    lines += [f"| {k} | {v} |" for k, v in sorted(FUNNEL.items(), key=lambda kv: -kv[1]) if k != "new"]
+    reasons = {}
+    for r in skipped.values():
+        key = r.split(":")[0].split("(")[0].strip()
+        reasons[key] = reasons.get(key, 0) + 1
+    lines += [f"| skipped after reading the description: {k} | {v} |" for k, v in sorted(reasons.items(), key=lambda kv: -kv[1])]
+    lines.append(f"| **sent to you this run** | **{FUNNEL.get('new', 0) - len(skipped)}** |")
+    run_summary("\n".join(lines))
     if skipped:
         counts_by_reason = {}
         for reason in skipped.values():
@@ -2347,7 +2481,8 @@ def run(args) -> int:
                                                int(cfg.get("max_jobs_per_recruiter", 3)),
                                                starred, manual_link,
                                                {c["name"] for c in all_companies if c.get("important")},
-                                               {c["name"] for c in all_companies if c.get("h1b")})
+                                               {c["name"] for c in all_companies if c.get("h1b")},
+                                               {c["name"] for c in all_companies if c.get("immigrant")})
     if cfg.get("browser_fallback", True):
         b = BROWSER_STATS
         if not browser_available():
