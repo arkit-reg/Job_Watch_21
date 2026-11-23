@@ -1487,9 +1487,32 @@ def term_regex(term: str) -> re.Pattern:
     return re.compile(rf"(?<![A-Za-z0-9]){body}s?(?![A-Za-z0-9])", re.I)
 
 
+TITLE_EXPAND = {"qa": "quality assurance", "ra": "regulatory affairs", "csv": "computer system validation",
+                "qms": "quality management system", "ipqa": "in process quality assurance", "doc": "document",
+                "docs": "document", "mfg": "manufacturing", "cgmp": "gmp", "coord": "coordinator", "ops": "operation",
+                "spec": "specialist", "assoc": "associate", "reg": "regulatory"}
+TITLE_DROP = {"i", "ii", "1", "2", "and", "the", "of", "for", "a", "an", "in", "&"}
+
+
+def title_words(title: str) -> set[str]:
+    """A title as a set of normalized words: any order, abbreviations expanded, levels I/II and plurals ignored."""
+    words = set()
+    for w in re.sub(r"[^a-z0-9]+", " ", title.lower()).split():
+        for x in TITLE_EXPAND.get(w, w).split():
+            if x in TITLE_DROP:
+                continue
+            if len(x) > 4 and x.endswith("s") and not x.endswith("ss"):
+                x = x[:-1]  # systems -> system, records -> record, operations -> operation
+            words.add(x)
+    return words
+
+
 def build_filters(cfg: dict) -> dict:
-    return {key: [term_regex(t) for t in cfg[key] if t.strip()]
-            for key in ("include", "exclude", "location_include", "location_exclude")}
+    f = {key: [term_regex(t) for t in cfg[key] if t.strip()]
+         for key in ("include", "exclude", "location_include", "location_exclude")}
+    if str(cfg.get("title_match", "")).lower() == "words":
+        f["title_sets"] = [title_words(t) for t in cfg["include"] if t.strip()]
+    return f
 
 
 def plain_title(job: Job) -> str:
@@ -1513,7 +1536,11 @@ SENIOR_ASSOCIATE = re.compile(r"\b(?:senior|sr\.?)\s+(?=associate\b)", re.I)
 
 
 def matches(job: Job, f: dict) -> bool:
-    if not any(p.search(job.title) for p in f["include"]):
+    if f.get("title_sets") is not None:
+        have = title_words(SENIOR_ASSOCIATE.sub("", job.title))
+        if not any(want <= have for want in f["title_sets"]):
+            return False
+    elif not any(p.search(job.title) for p in f["include"]):
         return False
     title = SENIOR_ASSOCIATE.sub("", job.title)  # "Senior Associate, QA" is early-career in pharma
     if any(p.search(title) for p in f["exclude"]):

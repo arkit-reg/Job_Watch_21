@@ -2,60 +2,74 @@
 # "Qatar" and "intern" won't match "internal". A space also matches "-" or "/".
 
 # A job title must contain at least one of these...
+# Your target role titles. Matched flexibly: any word order, QA = Quality Assurance, RA = Regulatory
+# Affairs, CSV = Computer System Validation, QMS = Quality Management System, levels I and II both count,
+# plurals count. (Senior, III, IV, Manager and other exclusions below still apply.)
+title_match = "words"
 include = [
-  # --- Quality Assurance / Quality Systems ---
-  "quality assurance", "QA", "quality system", "quality compliance", "quality associate",
-  "quality specialist", "quality analyst", "quality coordinator", "quality engineer",
-  "quality operations", "quality documentation", "quality records", "quality management", "QMS",
-  "GxP", "GMP compliance", "GMP auditor", "GCP auditor", "GLP auditor", "quality auditor",
-  "compliance auditor", "supplier quality", "sterility assurance", "data integrity",
-  "document control", "document controller", "document management", "documentation specialist",
-  "documentation coordinator", "change control", "deviation", "CAPA", "batch record",
-  "batch release", "batch disposition", "lot release", "complaint", "GMP training",
-  "compliance specialist", "compliance associate", "compliance analyst",
-
-  # --- Regulatory Affairs (specific titles, so lawyers and finance "regulatory" jobs stay out) ---
-  "regulatory affairs", "regulatory associate", "regulatory specialist", "regulatory coordinator",
-  "regulatory analyst", "regulatory operations", "regulatory CMC", "CMC regulatory", "regulatory submission",
-  "regulatory publishing", "regulatory labeling", "regulatory compliance", "regulatory intelligence",
-  "regulatory writer", "regulatory documentation", "regulatory information", "regulatory strategy",
-  "RA associate", "RA specialist", "submissions specialist", "submissions coordinator", "submissions associate",
-  "eCTD", "labeling specialist", "labeling coordinator", "labeling associate",
-
-  # --- Validation / CSV ---
-  "validation", "CSV", "computer software assurance", "qualification", "commissioning", "C&Q", "CQV",
-  "calibration", "metrology",
-
-  # --- Investigations and quality events (CAPA, deviation and complaint titles already match above) ---
-  "investigation", "quality investigator", "CAPA investigator", "deviation investigator", "quality event",
-  "nonconformance", "non-conformance", "root cause",
-
-  # --- Floor QA, inspection and release ---
-  "IPQA", "in-process QA", "in-process quality",
-  "quality control", "QC", "QC analyst", "QC associate", "QC specialist", "QC inspector", "QC technician",
-  "quality technician", "microbiology technician", "environmental monitoring", "QA inspector", "quality inspector", "inspection associate", "inspection technician", "visual inspection",
-  "product release", "release specialist", "material release", "incoming inspection",
-  "vendor qualification", "supplier qualification",
-
-  # --- GMP manufacturing and operations ---
-  "manufacturing associate", "manufacturing technician", "manufacturing specialist", "manufacturing operator",
-  "production associate", "production technician", "production operator", "process technician",
-  "bioprocess associate", "bioprocess technician", "biomanufacturing", "cell therapy manufacturing",
-  "upstream manufacturing", "downstream manufacturing", "aseptic", "fill finish", "packaging associate",
-  "packaging technician", "packaging operator", "GMP technician", "cleanroom", "MSAT associate",
-
-  # --- Technical writing, records and GMP training ---
-  "technical writer", "GMP writer", "SOP writer", "document specialist", "document coordinator",
-  "records specialist", "records coordinator", "records management", "training coordinator",
-  "training specialist", "learning management",
-
-  # --- Clinical documents and drug safety ---
-  "TMF", "eTMF", "trial master file", "clinical document", "clinical documentation",
-  "clinical trial assistant", "clinical trial associate", "pharmacovigilance", "drug safety",
-  "PV associate", "PV specialist", "case processing",
-
-  # --- More regulatory titles ---
-  "CMC", "product registration", "registration specialist", "registration associate", "dossier",
+  "Manufacturing QA Associate",
+  "QA Associate",
+  "Quality Assurance Associate",
+  "QA Operations Associate",
+  "Quality Operations Associate",
+  "Quality Assurance Specialist I",
+  "Manufacturing Quality Specialist",
+  "Batch Record Reviewer",
+  "Batch Record Review Associate",
+  "QA On-the-Floor Associate",
+  "IPQA Associate",
+  "QA Disposition Associate",
+  "Quality Systems Associate",
+  "Quality Systems Specialist",
+  "Quality Compliance Associate",
+  "Quality Compliance Specialist",
+  "Quality Assurance Compliance Specialist",
+  "QMS Specialist",
+  "Deviation Specialist",
+  "CAPA Specialist",
+  "Change Control Specialist",
+  "Quality Event Specialist",
+  "GMP Compliance Specialist",
+  "Quality Documentation Specialist",
+  "Document Control Specialist",
+  "QA Document Control Specialist",
+  "GMP Document Control Associate",
+  "Quality Documentation Associate",
+  "Document Control Coordinator",
+  "Quality Systems Coordinator",
+  "GMP Documentation Specialist",
+  "Document Management Specialist",
+  "Training Compliance Coordinator",
+  "Regulatory Affairs Associate",
+  "Regulatory Affairs Specialist I",
+  "Regulatory Affairs Assistant",
+  "Regulatory Affairs Coordinator",
+  "Regulatory Operations Associate",
+  "Regulatory Operations Specialist",
+  "Regulatory Submission Associate",
+  "Regulatory Documentation Specialist",
+  "Regulatory Compliance Associate",
+  "Regulatory Intelligence Associate",
+  "Regulatory CMC Associate",
+  "CMC Regulatory Affairs Associate",
+  "Regulatory Affairs CMC Specialist",
+  "Regulatory Submission Specialist",
+  "CMC Documentation Specialist",
+  "CMC Associate",
+  "Regulatory Dossier Associate",
+  "Regulatory Lifecycle Management Associate",
+  "Post-Approval Regulatory Associate",
+  "Regulatory Submission Coordinator",
+  "Validation Associate",
+  "Validation Specialist I",
+  "QA Validation Associate",
+  "Quality Validation Specialist",
+  "CSV Associate",
+  "Computer System Validation Associate",
+  "Validation Documentation Specialist",
+  "GMP Systems Specialist",
+  "Quality Systems Analyst",
+  "eQMS Specialist"
 ]
 
 # ...and none of these. Tuned for entry level; delete any you'd still want to hear about.
