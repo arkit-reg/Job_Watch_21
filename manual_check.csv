@@ -32,7 +32,6 @@ CSL Behring,https://www.cslbehring.com,the site said too many requests (HTTP 429
 CSL Seqirus,https://www.seqirus.com,the site said too many requests (HTTP 429),2026-10-26
 Curia,https://careers.curiaglobal.com/,couldn't find a job list on the page,2026-10-24
 Day One Biopharmaceuticals,https://www.dayonebio.com/careers/overview-careers/,couldn't find a job list on the page,2026-10-24
-Dr. Reddy's,https://careers.drreddys.com/jobs,couldn't find a job list on the page,2026-11-23
 Edenbridge Pharmaceuticals,https://www.edenbridgepharma.com/,couldn't find a job list on the page,2026-11-10
 Editas Medicine,https://www.editasmedicine.com/careers/,couldn't find a job list on the page,2026-11-11
 EditCo Bio,https://www.editco.bio/careers,couldn't find a job list on the page,2026-11-06
@@ -77,7 +76,6 @@ Syneos Health,https://www.syneoshealth.com/,couldn't find a job list on the page
 Tergus Pharma,https://www.medpharm.com/about-us/careers/,couldn't find a job list on the page,2026-11-23
 Teva Pharmaceuticals,https://www.tevapharm.com/,couldn't find a job list on the page,2026-10-24
 Tris Pharma,https://www.trispharma.com/,couldn't find a job list on the page,2026-10-26
-TScan Therapeutics,https://www.tscan.com/careers/,couldn't find a job list on the page,2026-11-24
 Ultragenyx,https://www.ultragenyx.com/join-our-team/,couldn't find a job list on the page,2026-11-21
 Unicon Pharma,https://uniconpharma.com/,couldn't find a job list on the page,2026-11-13
 United Therapeutics,https://www.unither.com/index,couldn't find a job list on the page,2026-10-24
@@ -107,7 +105,6 @@ Menarini Stemline,https://stemline.com/,couldn't find a job list on the page,202
 Novadoz Pharmaceuticals,https://novadozpharma.com/current-openings/,couldn't find a job list on the page,2026-10-26
 Octapharma USA,https://www.octapharmausa.com/career,couldn't find a job list on the page,2026-11-09
 Pharmacosmos,https://pharmacosmos.com/career,couldn't find a job list on the page,2026-10-28
-Prasco,https://prasco.com/open-positions/,couldn't find a job list on the page,2026-11-22
 Promega,https://www.promega.com/aboutus/careers/,couldn't find a job list on the page,2026-11-24
 Quotient Sciences,https://www.quotientsciences.com/,couldn't find a job list on the page,2026-10-26
 SOFIE,https://sofie.com/careers/,couldn't find a job list on the page,2026-10-26
@@ -212,8 +209,8 @@ Ergomed,https://www.ergomedplc.com/,the site returned an error (HTTP 503),2026-1
 Esperion,https://www.esperion.com,the site didn't respond in time,2026-10-27
 Eton Pharmaceuticals,https://etonpharma.com/careers,couldn't find a job list on the page,2026-10-26
 Everest Clinical Research,https://everestclinical.com/careers/,couldn't find a job list on the page,2026-11-24
-Evommune,https://www.evommune.com/job-openings/,couldn't find a job list on the page,2026-11-23
 EyePoint Pharmaceuticals,https://www.eyepointpharma.com,couldn't connect to the site,2026-11-21
+Firma Clinical Research,https://www.firmaclinical.com/,address not found (HTTP 404),2026-11-25
 Foghorn Therapeutics,https://www.foghorntx.com,the site blocks automated visits (HTTP 403),2026-10-27
 Fulcrum Therapeutics,https://www.fulcrumtx.com/careers/,couldn't find a job list on the page,2026-11-11
 Galbraith Laboratories,https://galbraith.com/,couldn't find a job list on the page,2026-11-24
@@ -226,7 +223,7 @@ Geron,https://www.geron.com/about-geron/careers-open-positions/,couldn't find a 
 GMP Pros,https://gmppros.com/about-us/,couldn't find a job list on the page,2026-11-24
 Greenleaf Health,https://www.greenleafhealth.com/,couldn't find a job list on the page,2026-11-10
 Harrow,https://www.harrow.com,the site didn't respond in time,2026-10-27
-Headlands Research,https://www.headlandsresearch.com/,the site said too many requests (HTTP 429),2026-11-18
+Headlands Research,https://headlandsresearch.com/,couldn't find a job list on the page,2026-11-18
 Heron Therapeutics,https://www.herontx.com/careers/,couldn't find a job list on the page,2026-10-26
 Hyde Engineering + Consulting,https://hyde-ec.com/careers/,couldn't find a job list on the page,2026-11-24
 Immunocore,https://www.immunocore.com/careers,couldn't find a job list on the page,2026-11-24
